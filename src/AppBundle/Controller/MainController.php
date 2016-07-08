@@ -249,38 +249,39 @@ class MainController extends Controller
             if ($limit == "week"){
                 //Total
                 $performDay = array('time'=>'Total');
-                for ($i=1; $i < 8; $i++) {
+                $day_list = array();
+                for ($i=1; $i < 9; $i++) {
+                    $day_list[$i] = $dateBefore->format('l')." ".$dateBefore->format('d/m');
                     $performDay = array_merge($performDay,array(
                         'ttAmount'.$i=>number_format($rp->findTtAmount($dateBefore,$dateAfter)/100,2,'.',' '),
                         'nbCommands'.$i=>$rp->findNbCommand($dateBefore,$dateAfter)
                         ));
-                    $dateAfter->add($allInterval);
-                    $dateBefore->add($allInterval);
+                    $dateAfter->sub($allInterval);
+                    $dateBefore->sub($allInterval);
                 }
                 $perform_list[] = $performDay;
-                $oneWeek = new DateInterval('P7D');
-                $dateAfter->sub($oneWeek);
-                $dateBefore->sub($oneWeek);
+                $oneWeek = new DateInterval('P8D');
+                $dateAfter->add($oneWeek);
+                $dateBefore->add($oneWeek);
                 $dateBefore->add($allInterval);
                 $dateBefore->sub($oneInterval);
                 for ($i=0; $i < 24 ; $i++) { 
                     $performDay = array('time'=>$dateBefore->format('H:i'));
-                    for ($j=1; $j < 8; $j++) {
+                    for ($j=1; $j < 9; $j++) {
                         $performDay = array_merge($performDay,array(
                             'ttAmount'.$j=>number_format($rp->findTtAmount($dateBefore,$dateAfter)/100,2,'.',' '),
                             'nbCommands'.$j=>$rp->findNbCommand($dateBefore,$dateAfter)
                             ));
-                        $dateAfter->add($allInterval);
-                        $dateBefore->add($allInterval);
+                        $dateAfter->sub($allInterval);
+                        $dateBefore->sub($allInterval);
                     }
-                    $dateAfter->sub($oneWeek);
-                    $dateBefore->sub($oneWeek);
+                    $dateAfter->add($oneWeek);
+                    $dateBefore->add($oneWeek);
                     $dateAfter->sub($oneInterval);
                     $dateBefore->sub($oneInterval);
                 $perform_list[] = $performDay;
                 }
-
-            return $this->render('salesMonth.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales'));
+            return $this->render('salesMonth.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','day_list'=>$day_list));
             }else{
                 return $this->render('sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales'));
             }

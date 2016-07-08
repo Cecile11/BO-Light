@@ -56,7 +56,7 @@ payzen.sqlite
 
 #Other:
 
-app/Ressources/key.ini
+app/Resources/key.ini
 .phpintel/
 web/*
 

@@ -88,7 +88,7 @@ class SuperController extends Controller
                     $payment->setVadsCustFirstName($data->customerResponse->billingDetails->firstName);
                     $payment->setVadsCustLastName($data->customerResponse->billingDetails->lastName);
                     $payment->setVadsTransStatus($data->commonResponse->transactionStatusLabel);
-                    $payment->setVadsEffectiveCreationDate(new DateTime($data->paymentResponse->creationDate));
+                    $payment->setVadsEffectiveCreationDate(new DateTime($data->paymentResponse->creationDate,new DateTimeZone('UTC')));
                     $payment->setVadsEffectiveAmount($data->paymentResponse->amount);
                     $payment->setVadsRefundAmount(isset($data->captureResponse->refundAmount) ? $data->captureResponse->refundAmount : 0);
                     $payment->setVadsPaymentType($data->paymentResponse->paymentType);

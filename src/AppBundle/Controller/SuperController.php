@@ -92,6 +92,7 @@ class SuperController extends Controller
                     $payment->setVadsEffectiveAmount($data->paymentResponse->amount);
                     $payment->setVadsRefundAmount(isset($data->captureResponse->refundAmount) ? $data->captureResponse->refundAmount : 0);
                     $payment->setVadsPaymentType($data->paymentResponse->paymentType);
+                    $payment->setVadsOperationType($data->paymentResponse->operationType == '0' ? 'DEBIT' : 'CREDIT');
                     $em->persist($payment);
                     $em->flush();
                     $i++;

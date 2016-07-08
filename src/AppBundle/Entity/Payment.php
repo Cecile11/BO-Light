@@ -89,6 +89,12 @@ class Payment
      * @ORM\Column(name="vads_payment_type", type="string", length=255,nullable=true)
      */
     private $vadsPaymentType;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="vads_operation_type", type="string", length=255,nullable=true)
+     */
+    private $vadsOperationType;
 
     /**
      * Get id
@@ -338,5 +344,29 @@ class Payment
     public function getVadsPaymentType()
     {
         return $this->vadsPaymentType;
+    }
+
+    /**
+     * Set vadsOperationType
+     *
+     * @param string $vadsOperationType
+     *
+     * @return Payment
+     */
+    public function setVadsOperationType($vadsOperationType)
+    {
+        $this->vadsOperationType = $vadsOperationType;
+
+        return $this;
+    }
+
+    /**
+     * Get vadsOperationType
+     *
+     * @return string
+     */
+    public function getVadsOperationType()
+    {
+        return $this->vadsOperationType;
     }
 }

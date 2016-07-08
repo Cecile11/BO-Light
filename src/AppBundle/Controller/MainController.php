@@ -220,29 +220,70 @@ class MainController extends Controller
         $dateAfter = $dates['dateAfter'];
         $oneInterval = $dates['oneInterval'];
         $allInterval = $dates['allInterval'];
-        $perform_list[] = array(
-            'time' => 'Total',
-            'ttAmount'=>number_format($rp->findTtAmount($dateBefore,$dateAfter)/100,2,'.',' '),
-            'nbCommands' => $rp->findNbCommand($dateBefore,$dateAfter),
-            'nbClients' => $rp->findNbClient($dateBefore,$dateAfter),
-            'nbAccepted' => $rp->findNbAccepted($dateBefore,$dateAfter),
-            'nbRefused' => $rp->findNbRefused($dateBefore,$dateAfter)
-            );
-        $dateFin = clone $dateBefore;
-        $dateBefore->add($allInterval);
-        $dateBefore->sub($oneInterval);
-        while($dateAfter > $dateFin) {
+        if ($limit == "day-2" or $limit == "day-3" or $limit == "yesterday" or $limit == "today"){
             $perform_list[] = array(
-                'time' => ($limit == 'today' or $limit =='yesterday') ? $dateBefore->format('H:i') : (($limit == 'week') ? $dateBefore->format('D') : $dateBefore->format('Y-m-d')),
+                'time' => 'Total',
                 'ttAmount'=>number_format($rp->findTtAmount($dateBefore,$dateAfter)/100,2,'.',' '),
                 'nbCommands' => $rp->findNbCommand($dateBefore,$dateAfter),
                 'nbClients' => $rp->findNbClient($dateBefore,$dateAfter),
                 'nbAccepted' => $rp->findNbAccepted($dateBefore,$dateAfter),
                 'nbRefused' => $rp->findNbRefused($dateBefore,$dateAfter)
-            );
-            $dateAfter->sub($oneInterval);
+                );
+            $dateFin = clone $dateBefore;
+            $dateBefore->add($allInterval);
             $dateBefore->sub($oneInterval);
+            while($dateAfter > $dateFin) {
+                $perform_list[] = array(
+                    'time' => $dateBefore->format('H:i'),
+                    'ttAmount'=>number_format($rp->findTtAmount($dateBefore,$dateAfter)/100,2,'.',' '),
+                    'nbCommands' => $rp->findNbCommand($dateBefore,$dateAfter),
+                    'nbClients' => $rp->findNbClient($dateBefore,$dateAfter),
+                    'nbAccepted' => $rp->findNbAccepted($dateBefore,$dateAfter),
+                    'nbRefused' => $rp->findNbRefused($dateBefore,$dateAfter)
+                );
+                $dateAfter->sub($oneInterval);
+                $dateBefore->sub($oneInterval);
+            }
+            return $this->render('sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales'));
+        }else{
+            if ($limit == "week"){
+                //Total
+                $performDay = array('time'=>'Total');
+                for ($i=1; $i < 8; $i++) {
+                    $performDay = array_merge($performDay,array(
+                        'ttAmount'.$i=>number_format($rp->findTtAmount($dateBefore,$dateAfter)/100,2,'.',' '),
+                        'nbCommands'.$i=>$rp->findNbCommand($dateBefore,$dateAfter)
+                        ));
+                    $dateAfter->add($allInterval);
+                    $dateBefore->add($allInterval);
+                }
+                $perform_list[] = $performDay;
+                $oneWeek = new DateInterval('P7D');
+                $dateAfter->sub($oneWeek);
+                $dateBefore->sub($oneWeek);
+                $dateBefore->add($allInterval);
+                $dateBefore->sub($oneInterval);
+                for ($i=0; $i < 24 ; $i++) { 
+                    $performDay = array('time'=>$dateBefore->format('H:i'));
+                    for ($j=1; $j < 8; $j++) {
+                        $performDay = array_merge($performDay,array(
+                            'ttAmount'.$j=>number_format($rp->findTtAmount($dateBefore,$dateAfter)/100,2,'.',' '),
+                            'nbCommands'.$j=>$rp->findNbCommand($dateBefore,$dateAfter)
+                            ));
+                        $dateAfter->add($allInterval);
+                        $dateBefore->add($allInterval);
+                    }
+                    $dateAfter->sub($oneWeek);
+                    $dateBefore->sub($oneWeek);
+                    $dateAfter->sub($oneInterval);
+                    $dateBefore->sub($oneInterval);
+                $perform_list[] = $performDay;
+                }
+
+            return $this->render('salesMonth.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales'));
+            }else{
+                return $this->render('sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales'));
+            }
         }
-        return $this->render('performance.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales'));
     }
 }

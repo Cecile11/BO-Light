@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+{% block title %}BO Light | Sales {% endblock %}
+{% block stylesheets %}
+{{ parent()}}
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css">
+	<style>
+	table td{
+		text-align:center;
+	}
+	.numericCol {text-align:right;}
+	.numericTitle{text-align:right;}
+	.timeCol{text-align:left;}
+	table.display {
+		text-align:right;
+		margin: 0 auto;
+		max-width:300px;
+		clear: both;
+		border-collapse: collapse;
+		table-layout: fixed;
+		word-wrap:break-word;
+	}
+	</style>
+{% endblock %}
+{% block body %}
+{{parent()}}
+	<table id="saleMonthTable" class="compact stripe">
+		<thead>
+			<tr>
+				<th>Time</th>
+				<th colspan="2"> Monday </th>
+				<th colspan="2"> Tuesday </th>
+				<th colspan="2"> Wednesday </th>
+				<th colspan="2"> Thursday </th>
+				<th colspan="2"> Friday </th>
+				<th colspan="2"> Saturday </th>
+				<th colspan="2"> Sunday </th>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				{% for i in 1..7 %}
+					<th>Amount</th>
+				    <th>Orders</th>
+				{% endfor %}
+				<td></td>
+		</thead>
+		<tbody>
+		{% for perform in perform_list %}
+		{% if loop.first %}
+		<tr>
+			<td class="timeCol"><b>{{perform.time}}</b></td>
+			<td class="numericCol"><b>{% if perform.ttAmount1|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount1|filtreZero}}</b></td>
+			<td>{{perform.nbCommands1|filtreZero}}</td>
+			<td class="numericCol"><b>{% if perform.ttAmount2|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount2|filtreZero}}</b></td>
+			<td>{{perform.nbCommands2|filtreZero}}</td>
+			<td class="numericCol"><b>{% if perform.ttAmount3|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount3|filtreZero}}</b></td>
+			<td>{{perform.nbCommands3|filtreZero}}</td>
+			<td class="numericCol"><b>{% if perform.ttAmount4|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount4|filtreZero}}</b></td>
+			<td>{{perform.nbCommands4|filtreZero}}</td>
+			<td class="numericCol"><b>{% if perform.ttAmount5|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount5|filtreZero}}</b></td>
+			<td>{{perform.nbCommands5|filtreZero}}</td>
+			<td class="numericCol"><b>{% if perform.ttAmount6|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount6|filtreZero}}</b></td>
+			<td>{{perform.nbCommands6|filtreZero}}</td>
+			<td class="numericCol"><b>{% if perform.ttAmount7|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount7|filtreZero}}</b></td>
+			<td>{{perform.nbCommands7|filtreZero}}</td>
+			<td></td>
+		</tr>
+		{% else %}
+		<tr>
+			<td class="timeCol">{{perform.time}}</td>
+			<td class="numericCol">{% if perform.ttAmount1|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount1|filtreZero}}</td>
+			<td>{{perform.nbCommands1|filtreZero}}</td>
+			<td class="numericCol">{% if perform.ttAmount2|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount2|filtreZero}}</td>
+			<td>{{perform.nbCommands2|filtreZero}}</td>
+			<td class="numericCol">{% if perform.ttAmount3|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount3|filtreZero}}</td>
+			<td>{{perform.nbCommands3|filtreZero}}</td>
+			<td class="numericCol">{% if perform.ttAmount4|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount4|filtreZero}}</td>
+			<td>{{perform.nbCommands4|filtreZero}}</td>
+			<td class="numericCol">{% if perform.ttAmount5|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount5|filtreZero}}</td>
+			<td>{{perform.nbCommands5|filtreZero}}</td>
+			<td class="numericCol">{% if perform.ttAmount6|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount6|filtreZero}}</td>
+			<td>{{perform.nbCommands6|filtreZero}}</td>
+			<td class="numericCol">{% if perform.ttAmount7|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount7|filtreZero}}</td>
+			<td>{{perform.nbCommands7|filtreZero}}</td>
+			<td></td>
+		</tr>
+		{% endif %}
+		{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}
+{% block javascripts %}
+{{ parent()}}
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+	<script>
+	$(document).ready(function(){
+    	$('#saleMonthTable').DataTable({
+    		searching: false,
+    		paging: false,
+    		ordering: false,
+    		"columns": [
+				{ "width": "20px" },
+				{ "width": "20px" },
+				{ "width": "20px" },
+				{ "width": "20px" },
+				{ "width": "20px" },
+				{ "width": "20px" },
+				{ "width": "20px" },
+				{ "width": "20px" },
+				{ "width": "20px" },
+				{ "width": "20px" },
+				{ "width": "20px" },
+				{ "width": "20px" },
+				{ "width": "20px" },
+				{ "width": "20px" },
+				{ "width": "20px" },
+			    null
+			  ]
+		});
+	});
+	</script>
+{% endblock %}

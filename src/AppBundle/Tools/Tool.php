@@ -24,6 +24,13 @@ class Tool{
 		return $dateTime;
 	}
 
+    public function roundToMonday(DateTime $dateTime){
+        while($dateTime->format('D') != 'Mon'){
+            $dateTime->sub(new DateInterval('P1D'));
+        }
+        return $dateTime;
+    }
+
 	public function getDates($limit){
         $utc = new DateTimeZone('UTC');
 		$dateAfter = new DateTime(null,$utc);
@@ -55,9 +62,11 @@ class Tool{
                 $dateBefore->sub($allInterval);
                 break;
             case 'week':
-           		$oneInterval = new DateInterval('P1D');
-            	$allInterval = new DateInterval('P7D');
-                $dateBefore->sub($allInterval);
+                $this->roundToMonday($dateAfter);
+                $this->roundToMonday($dateBefore);
+           		$oneInterval = new DateInterval('PT1H');
+            	$allInterval = new DateInterval('P1D');
+                $dateAfter->add($allInterval);
                 break;
             case 'month':
             	$oneInterval = new DateInterval('P1D');

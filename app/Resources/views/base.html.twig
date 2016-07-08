@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}BO Light{% endblock %}</title>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+            <style>
+            body{
+                padding-top:55px;
+            }
+            </style>
+        {% endblock %}
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}" />
+    </head>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ path('homepage') }}">BO Light</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                {% if not is_granted('ROLE_GUEST') %}
+                <li class="active"><a href="{{ path('payment') }}{% if limit is defined %}/{{limit}}{% endif %}">Payments</a></li>
+                <li class="active"><a href="{{ path('list') }}{% if limit is defined %}/{{limit}}{% endif %}">IPN</a></li>
+                {% endif %}
+                <li class="active"><a href="{{ path('clients') }}{% if limit is defined %}/{{limit}}{% endif %}"> Clients </a></li>
+                <li class="active"><a href="{{ path('sales') }}{% if limit is defined %}/{{limit}}{% endif %}"> Sales </a></li>
+                {% block navbar %}{% endblock %}
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <li class="active"><a href="{{ path('super_option')}}"> Super Option </a></li>
+                {% endif %}
+                
+                <li><a href="{{ path('fos_user_security_logout') }}" >
+                    <span class="glyphicon glyphicon-log-out" title="Logout"></span>
+                </a></li>
+                {% else %}
+                <li><a href="{{ path('fos_user_security_login') }}">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <body>
+        {% block body %}
+        {% if limit is defined and url is defined %}
+        <a href="{{ path(url,{'limit':'today'})}}"><button class="btn-sm {{ (limit == "today") ? 'btn-success' : 'btn-primary'}} " >Today</button></a>
+        <a href="{{ path(url,{'limit':'yesterday'})}}"><button class="btn-sm {{ (limit == "yesterday") ? 'btn-success' : 'btn-primary'}} " >Yesterday</button></a>
+        <a href="{{ path(url,{'limit':'day-2'})}}"><button class="btn-sm {{ (limit == "day-2") ? 'btn-success' : 'btn-primary'}} " >D-2</button></a>
+        <a href="{{ path(url,{'limit':'day-3'})}}"><button class="btn-sm {{ (limit == "day-3") ? 'btn-success' : 'btn-primary'}} " >D-3</button></a>
+        <a href="{{ path(url,{'limit':'week'}) }}"><button class="btn-sm {{ (limit == "week") ? 'btn-success' : 'btn-primary'}} " >Week</button></a>
+        <a href="{{ path(url,{'limit':'month'})}}"><button class="btn-sm {{ (limit == "month") ? 'btn-success' : 'btn-primary'}} " >Month</button></a>
+        <a href="{{ path(url,{'limit':'quarter'})}}"><button class="btn-sm {{ (limit == "quarter") ? 'btn-success' : 'btn-primary'}} " >Quarter</button></a>
+        {% endif %}
+        {% endblock %}
+    </body>
+    {% block javascripts %}
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    {% endblock %}
+</html>
+

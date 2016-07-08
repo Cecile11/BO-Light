@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+{% block title %}BO Light | Ipn {% endblock %}
+{% block stylesheets %}
+{{ parent()}}
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css">
+	<style>
+	.popover{ max-width:600px; }
+	</style>
+{% endblock %}
+{% block body %}
+{% if is_granted('ROLE_GUEST') %}
+	<p>Nothing to display or insufficient rights</p>
+{% else %}
+{{parent()}}
+	<table id="ipnTable">
+		<thead>
+			<tr>
+				<td><strong>Id</strong><br/><small>sign</small></td>
+				<td><strong>SiteId</strong></td>
+				<td><strong>Shop Name</strong></td>
+				<td><strong>Source</strong></td>
+				<td><strong>Détail</strong></td>
+				<td><strong> OrderId </strong></td>
+				<td><strong>Creation Date</strong><br/><small>TimeStamp</small></td>
+				<td><strong> Uuid or Transaction</strong></td>
+				<td><strong>Amount</strong><br/><small>Cur/Amnt</small></td>
+				<td><strong>Status</strong></td>
+        		<td><strong>Mode</strong></td>
+        		<td><strong>Type</strong></td>
+        		<td><strong>Brand</strong></td>
+        		<td><strong>Card</strong></td>
+        		<td><strong>Mail</strong></td>
+			</tr>
+		</thead>
+		<tbody>
+			{% for ipn in pagination %}
+			<tr>
+				<td>{{ipn.id}}<br/><small>{{ipn.checked}}</small> </td>
+				<td>{{ipn.vadsSiteId}}<br/><small>{{ipn.vadsContractUsed}}</small></td>
+				<td>{{ipn.vadsShopName}}</td>
+				<td>{{ipn.vadsUrlCheckSrc}}<br><small>{{ipn.vadsCtxMode}}</small> </td>
+				<td>
+					<button type="button" class="btn-sm btn-primary" data-container="body" data-toggle="popover" data-placement="auto right" data-content="{{ipn.full|obfData|getLines}}" data-original-title="All parameters" title="All parameters"  data-html="true">Details</button> 
+				</td>
+				<td>{{ipn.vadsOrderId}}</td>
+				<td>{{ipn.vadsEffectiveCreationDate|date('Y-m-d H:i:s')}}<br/><small>{{ipn.ts|date('Y-m-d H:i:s')}}</small></td>
+				<td>{{ipn.vadsTransUuid}}<br><small>{{ipn.vadsTransId}}</small></td>
+				<td>
+					{{ipn.vadsEffectiveAmount}}
+					<br>
+					<small>{{((ipn.vadsEffectiveAmount)/100)}}/{{ipn.vadsCurrency}}</small>
+				</td>
+				<td>{{ipn.vadsTransStatus}}</td>
+				<td>{{ipn.vadsAuthMode}}</td>
+				<td>{{ipn.vadsOperationType}}</td>
+				<td>
+				<div>
+				{{ipn.vadsCardBrand}}
+				</div>
+				</td>
+				<td>{{ipn.vadsCardNumber}}</td>
+				<td>{{ipn.vadsCustEmail|obfMail("remplacer.com")}}</td>{# To Do appliquer un filtre sur le mail #}
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endif %}
+{% endblock %}
+{% block javascripts %}
+{{ parent()}}
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+	<script>
+	$(function () {
+      $('[data-toggle="popover"]').popover()
+
+      $('body').on('click', function (e) {
+        $('[data-toggle="popover"]').each(function () {
+          //the 'is' for buttons that trigger popups
+          //the 'has' for icons within a button that triggers a popup
+          if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+            $(this).popover('hide');
+          }
+        });
+      });
+    });
+	$(document).ready(function(){
+    	$('#ipnTable').DataTable({
+    		responsive:true,
+    		"aaSorting": []
+    	});
+	});
+	$('#ipnTable').on('draw.dt',function(){
+		$("[data-toggle='popover']").popover('hide');
+	});
+	</script>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+{% block title %}BO Light | Payments {% endblock %}
+{% block stylesheets %}
+{{ parent()}}
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css">
+	<style>
+	.popover{ max-width:600px; }
+	.btn{
+		line-height:1;
+	}
+	</style>
+{% endblock %}
+{% block body %}
+{% if is_granted('ROLE_GUEST') %}
+	<p>Nothing to display or insufficient rights</p>
+{% else %}
+{{parent()}}
+	<table id="paymentsTable">
+		<thead>
+			<tr>
+				<td><strong> uuid </strong><br><small> transactionID </small></td>
+				<td><strong> OrderID </strong><br><small> Ref Client | Détails </small></td>
+				<td><strong> Amount </strong><br><small> Modified </small></td>
+				<td><strong> CreationDate </strong><br><small> LastDate </small></td>
+				<td><strong>Status</strong></td>
+				<td><strong>Type</strong></td>
+				<td><strong>Brand</strong></td>
+				<td><strong> eMail </strong></td>
+			</tr>
+		</thead>
+		<tbody>
+			{% for payment in payment_list %}
+			<tr>
+				<td>{{payment.uuid}}<br><small>{{payment.data.paymentResponse.transactionId}}</small></td>
+				<td>
+					{{payment.data.orderResponse.orderId}}<br><small>{{payment.data.customerResponse.billingDetails.reference}}
+					</small>
+					<button type="button" class="btn btn-primary btn-sm" data-container="body" data-toggle="popover" data-placement="auto right" data-content="{{payment.data|json_encode|obfData|getLines}}" data-original-title="Détails" title="Détails"  data-html="true" >+</button>
+				</td>
+				<td>{{payment.data.paymentResponse.amount}}<br><small>{{((payment.data.paymentResponse.amount)/100)}}/{{payment.data.paymentResponse.currency}}</small></td>
+				<td>{{payment.data.paymentResponse.creationDate|date('Y-m-d H:i:s')}}<br/><small>{{payment.data.paymentResponse.expectedCaptureDate|date('Y-m-d H:i:s')}}</small></td>
+				<td>{{payment.data.commonResponse.transactionStatusLabel}}</td>
+				<td>{{payment.vadsPaymentType == 'RETRY' ? "CREDIT" : "DEBIT"}}</td>
+				<td>{{payment.data.cardResponse.brand}}</td>
+				<td>{{payment.data.customerResponse.billingDetails.email|obfMail('exemple.com')}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endif %}
+{% endblock %}
+{% block javascripts %}
+{{ parent()}}
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+	<script>
+	$(function () {
+      $('[data-toggle="popover"]').popover()
+
+      $('body').on('click', function (e) {
+        $('[data-toggle="popover"]').each(function () {
+          //the 'is' for buttons that trigger popups
+          //the 'has' for icons within a button that triggers a popup
+          if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+            $(this).popover('hide');
+          }
+        });
+      });
+
+    });
+	$(document).ready(function(){
+    	$('#paymentsTable').DataTable({
+    		"aaSorting": []
+    		});
+	});
+	</script>
+{% endblock %}

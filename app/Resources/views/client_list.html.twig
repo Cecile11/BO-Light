@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+{% block title %}BO Light | Clients {% endblock %}
+{% block stylesheets %}
+{{ parent()}}
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css">
+	<style>
+	.popover{ max-width:600px; }
+	.numericCol {text-align:right;}
+	</style>
+{% endblock %}
+{% block body %}
+{{parent()}}
+	<table id="ClientTable">
+		<thead>
+			<tr>
+				<th>Ref</th>
+				<th> Name </th>
+				<th class="numericCol">Payed</th>
+				<th>Orders</th>
+				<th>Refused</th>
+				{% if not is_granted('ROLE_GUEST') %}
+				<th>Payments<th>
+				{% endif %}
+			</tr>
+		</thead>
+		<tbody>
+			{% for client in client_list %}
+				<tr>
+					<td>{{ client.idClient }} </td>
+					<td>{{ client.first_name }} {{ client.last_name }}</td>
+					<td class="numericCol">€ &nbsp;{{ client.amountTt|filtreZero}}</td>
+					<td>{{ client.nbCommande}}</td>
+					<td>{{ client.nbRefused}}</td>
+					{% if not is_granted('ROLE_GUEST') %}
+					<td><a href="{{ path('payment',{'client':client.idClient}) }}"><button class="btn-sm btn-primary">Payments</button></a><td>
+					{% endif %}
+				</tr>
+			{% endfor %}
+		</tbody>
+		<tfoot>
+			<tr>
+				<th>Ref</th>
+				<th> Name </th>
+				<th class="numericCol">Payed</th>
+				<th>Orders</th>
+				<th>Refused</th>
+				<th>Payments<th>
+			</tr>
+		</tfoot>
+	</table>
+{% endblock %}
+{% block javascripts %}
+{{ parent()}}
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+	<script>
+	$(document).ready(function(){
+    	$('#ClientTable').DataTable({
+    		"aaSorting":[]
+    	});
+	});
+	</script>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+{% block title %}BO Light | Sales {% endblock %}
+{% block stylesheets %}
+{{ parent()}}
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css">
+	<style>
+	table td{
+		text-align:center;
+	}
+	.numericCol {text-align:right;}
+	.numericTitle{text-align:right;}
+	.timeCol{text-align:left;}
+	table.display {
+		text-align:right;
+		margin: 0 auto;
+		max-width:300px;
+		clear: both;
+		border-collapse: collapse;
+		table-layout: fixed;
+		word-wrap:break-word;
+	}
+	</style>
+{% endblock %}
+{% block body %}
+{{parent()}}
+	<table id="performanceTable" class="compact stripe">
+		<thead>
+			<tr>
+				<th> Time </th>
+				<th> Amount</th>
+				<th> Orders </th>
+				<th> Clients </th>
+				<th> Payed </th>
+				<th> Refused </th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for perform in perform_list %}
+		{% if loop.first %}
+		<tr>
+		
+			<td class="timeCol"><b>{{perform.time}}</b></td>
+			<td class="numericCol"><b>{% if perform.ttAmount|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount|filtreZero}}</b></td>
+			<td><b>{{perform.nbCommands|filtreZero}}</b></td>
+			<td><b>{{perform.nbClients|filtreZero}}</b></td>
+			<td><b>{{perform.nbAccepted|filtreZero}}</b></td>
+			<td><b>{{perform.nbRefused|filtreZero}}</b></td>
+			<td></td>
+		</tr>
+		{% else %}
+		<tr>
+		
+			<td class="timeCol">{{perform.time}}</td>
+			<td class="numericCol">{% if perform.ttAmount|filtreZero %}€{% endif %} &nbsp;{{perform.ttAmount|filtreZero}}</td>
+			<td>{{perform.nbCommands|filtreZero}}</td>
+			<td>{{perform.nbClients|filtreZero}}</td>
+			<td>{{perform.nbAccepted|filtreZero}}</td>
+			<td>{{perform.nbRefused|filtreZero}}</td>
+			<td></td>
+		</tr>
+		{% endif %}
+		{% endfor %}
+		</tbody>
+		<tfoot>
+			<tr>
+				<th> Time </th>
+				<th class="numericTitle"> Amount</th>
+				<th> Orders </th>
+				<th> Clients </th>
+				<th> Payed </th>
+				<th> Refused </th>
+				<th></th>
+			</tr>
+		</tfoot>
+	</table>
+{% endblock %}
+{% block javascripts %}
+{{ parent()}}
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+	<script>
+	$(document).ready(function(){
+    	$('#performanceTable').DataTable({
+    		searching: false,
+    		paging: false,
+    		ordering: false,
+    		"columns": [
+			    { "width": "20px" },
+			    { "width": "20px" },
+			    { "width": "20px" },
+			    { "width": "20px" },
+			    { "width": "20px" },
+			    { "width": "20px" },
+			    null
+			  ]
+		});
+	});
+	</script>
+{% endblock %}

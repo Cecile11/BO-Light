@@ -259,7 +259,7 @@ class MainController extends Controller
                     $day_list[$i] = $dateBefore->format('l')." ".$dateBefore->format('d/m');
                     $performDay = array_merge($performDay,array(
                         'ttAmount'.$i=>number_format($rp->findTtAmount($dateBefore,$dateAfter)/100,2,'.',' '),
-                        'nbCommands'.$i=>$rp->findNbCommand($dateBefore,$dateAfter)
+                        'nbCommands'.$i=>$rp->findNbAccepted($dateBefore,$dateAfter)
                         ));
                     $dateAfter->sub($allInterval);
                     $dateBefore->sub($allInterval);
@@ -274,7 +274,7 @@ class MainController extends Controller
                     for ($j=1; $j < 9; $j++) {
                         $performDay = array_merge($performDay,array(
                             'ttAmount'.$j=>number_format($rp->findTtAmount($dateBefore,$dateAfter)/100,2,'.',' '),
-                            'nbCommands'.$j=>$rp->findNbCommand($dateBefore,$dateAfter)
+                            'nbCommands'.$j=>$rp->findNbAccepted($dateBefore,$dateAfter)
                             ));
                         $dateAfter->sub($allInterval);
                         $dateBefore->sub($allInterval);

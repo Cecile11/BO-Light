@@ -39,7 +39,7 @@
 					<button type="button" class="btn btn-primary btn-sm" data-container="body" data-toggle="popover" data-placement="auto right" data-content="{{payment.data|json_encode|obfData|getLines}}" data-original-title="Détails" title="Détails"  data-html="true" >+</button>
 				</td>
 				<td>{{payment.data.paymentResponse.amount}}<br><small>{{((payment.data.paymentResponse.amount)/100)}}/{{payment.data.paymentResponse.currency}}</small></td>
-				<td>{{payment.data.paymentResponse.creationDate|date('Y-m-d H:i:s')}}<br/><small>{{payment.data.paymentResponse.expectedCaptureDate|date('Y-m-d H:i:s')}}</small></td>
+				<td>{{payment.vadsEffectiveCreationDate|date('Y-m-d H:i:s')}}<br/><small>{{payment.data.paymentResponse.expectedCaptureDate|date('Y-m-d H:i:s')}}</small></td>
 				<td>{{payment.data.commonResponse.transactionStatusLabel}}</td>
 				<td>{{payment.vadsPaymentType == 'RETRY' ? "CREDIT" : "DEBIT"}}</td>
 				<td>{{payment.data.cardResponse.brand}}</td>

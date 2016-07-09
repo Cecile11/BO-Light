@@ -133,4 +133,14 @@ class SuperController extends Controller
         $application->run($input, $output);
         return new Response($output->fetch());
     }
+
+    /**
+     * @Route("/super_option/payment_table/{limit}",name="payment_table")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     */
+    public function listPaymentAction(Request $request,$limit = "today"){
+        $dates = $this->get('app.Tool')->getDates($limit);
+        $payment_list = $this->getDoctrine()->getManager()->getRepository('AppBundle:Payment')->findAllByDate($dates['dateBefore'],$dates['dateAfter']);
+        return $this->render('payment_table.html.twig',array('payment_list'=>$payment_list,'limit'=>$limit,'url'=>'payment_table'));
+    }
 }

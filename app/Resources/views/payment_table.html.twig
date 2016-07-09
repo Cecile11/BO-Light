@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+{% block title %}BO Light | Payments_table {% endblock %}
+{% block stylesheets %}
+{{ parent()}}
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css">
+{% endblock %}
+{% block body %}
+{% if not is_granted('ROLE_SUPER_ADMIN') %}
+	<p>Nothing to display or insufficient rights</p>
+{% else %}
+{{parent()}}
+	<table id="paymentsTable">
+		<thead>
+			<tr>
+				<th>Uuid</th>
+				<th>ref client</th>
+				<th>First Name Client</th>
+				<th>Last Name Client</th>
+				<th> Transaction Status</th>
+				<th> Creation Date</th>
+				<th> Amount </th>
+				<th> Refund Amount</th>
+				<th> Operation Type</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for payment in payment_list %}
+			<tr>
+				<td>{{payment.uuid}}</td>
+				<td>{{payment.vadsCustId}}</td>
+				<td>{{payment.vadsCustFirstName}}</td>
+				<td>{{payment.vadsCustLastName}}</td>
+				<td>{{payment.vadsTransStatus}}</td>
+				<td>{{payment.vadsEffectiveCreationDate|date('Y-m-d H:i:s')}}</td>
+				<td>{{payment.vadsEffectiveAmount}}</td>
+				<td>{{payment.vadsRefundAmount}}</td>
+				<td>{{payment.vadsOperationType}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endif %}
+{% endblock %}
+{% block javascripts %}
+{{ parent()}}
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+	<script>
+	$(function () {
+      $('[data-toggle="popover"]').popover()
+
+      $('body').on('click', function (e) {
+        $('[data-toggle="popover"]').each(function () {
+          //the 'is' for buttons that trigger popups
+          //the 'has' for icons within a button that triggers a popup
+          if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+            $(this).popover('hide');
+          }
+        });
+      });
+
+    });
+	$(document).ready(function(){
+    	$('#paymentsTable').DataTable({
+    		"aaSorting": []
+    		});
+	});
+	</script>
+{% endblock %}

@@ -27,7 +27,7 @@
 	<table id="performanceTable" class="compact stripe">
 		<thead>
 			<tr>
-				<th> Time </th>
+				<th> Time UTC{% if decalage > 0 %}+{% endif %}{{decalage}} </th>
 				<th> Amount</th>
 				<th> Orders </th>
 				<th> Clients </th>

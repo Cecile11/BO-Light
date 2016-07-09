@@ -223,6 +223,8 @@ class MainController extends Controller
         $dateAfter = $dates['dateAfter'];
         $oneInterval = $dates['oneInterval'];
         $allInterval = $dates['allInterval'];
+        $heure = (int) $dateBefore->format('H');
+        $decalage = $heure - 24;
         if ($limit == "day-2" or $limit == "day-3" or $limit == "yesterday" or $limit == "today"){
             $perform_list[] = array(
                 'time' => 'Total',
@@ -250,7 +252,7 @@ class MainController extends Controller
                 $dateAfter->sub($oneInterval);
                 $dateBefore->sub($oneInterval);
             }
-            return $this->render('sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales'));
+            return $this->render('sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','decalage'=>$decalage));
         }else{
             if ($limit == "week"){
                 //Total

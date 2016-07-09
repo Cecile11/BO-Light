@@ -163,7 +163,8 @@ class MainController extends Controller
                             $payment->setVadsCustFirstName($data->customerResponse->billingDetails->firstName);
                             $payment->setVadsCustLastName($data->customerResponse->billingDetails->lastName);
                             $payment->setVadsTransStatus($data->commonResponse->transactionStatusLabel);
-                            $payment->setVadsEffectiveCreationDate(new DateTime($data->paymentResponse->creationDate));
+                            $date = DateTime::createFromFormat(DateTime::W3C,$data->paymentResponse->creationDate,new DateTimeZone('UTC'));
+                            $payment->setVadsEffectiveCreationDate($date);
                             $payment->setVadsEffectiveAmount($data->paymentResponse->amount);
                             $payment->setVadsRefundAmount(isset($data->captureResponse->refundAmount) ? $data->captureResponse->refundAmount : 0);
                             $payment->setVadsPaymentType($data->paymentResponse->paymentType);
@@ -251,6 +252,9 @@ class MainController extends Controller
                 //Total
                 $performDay = array('time'=>'Total');
                 $day_list = array();
+                $oneWeek = new DateInterval('P8D');
+                $dateBefore->add($oneWeek);
+                $dateBefore->sub($oneInterval);
                 for ($i=1; $i < 9; $i++) {
                     $day_list[$i] = $dateBefore->format('l')." ".$dateBefore->format('d/m');
                     $performDay = array_merge($performDay,array(
@@ -261,7 +265,6 @@ class MainController extends Controller
                     $dateBefore->sub($allInterval);
                 }
                 $perform_list[] = $performDay;
-                $oneWeek = new DateInterval('P8D');
                 $dateAfter->add($oneWeek);
                 $dateBefore->add($oneWeek);
                 $dateBefore->add($allInterval);

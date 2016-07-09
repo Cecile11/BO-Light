@@ -13,6 +13,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use DateTime;
 use DateInterval;
+use DateTimeZone;
 
 class SuperController extends Controller
 {
@@ -88,7 +89,8 @@ class SuperController extends Controller
                     $payment->setVadsCustFirstName($data->customerResponse->billingDetails->firstName);
                     $payment->setVadsCustLastName($data->customerResponse->billingDetails->lastName);
                     $payment->setVadsTransStatus($data->commonResponse->transactionStatusLabel);
-                    $payment->setVadsEffectiveCreationDate(new DateTime($data->paymentResponse->creationDate));
+                    $date = DateTime::createFromFormat(DateTime::W3C,$data->paymentResponse->creationDate,new DateTimeZone('UTC'));
+                    $payment->setVadsEffectiveCreationDate($date);
                     $payment->setVadsEffectiveAmount($data->paymentResponse->amount);
                     $payment->setVadsRefundAmount(isset($data->captureResponse->refundAmount) ? $data->captureResponse->refundAmount : 0);
                     $payment->setVadsPaymentType($data->paymentResponse->paymentType);

@@ -57,7 +57,7 @@ class Tool{
             case 'week':
            		$oneInterval = new DateInterval('PT1H');
             	$allInterval = new DateInterval('P1D');
-                $dateBefore->sub($allInterval);
+                $dateBefore->sub(new DateInterval('P8D'));
                 break;
             case 'month':
             	$oneInterval = new DateInterval('P1D');

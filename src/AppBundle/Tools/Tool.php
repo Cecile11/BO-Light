@@ -22,7 +22,7 @@ class Tool{
 		$ts = $ts + (24 - $hour)*3600;
 		$dateTime->setTimestamp($ts);
 		return $dateTime;
-	}
+	} 
 
 	public function getDates($limit){
         $utc = new DateTimeZone('UTC');

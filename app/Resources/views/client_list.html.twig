@@ -29,7 +29,7 @@
 				<tr>
 					<td>{{ client.idClient }} </td>
 					<td>{{ client.first_name }} {{ client.last_name }}</td>
-					<td class="numericCol">€ &nbsp;{{ client.amountTt|filtreZero}}</td>
+					<td class="numericCol">{% if client.amountTt|filtreZero %}€{% endif %}{{ client.amountTt|filtreZero}}</td>
 					<td>{{ client.nbCommande}}</td>
 					<td>{{ client.nbRefused}}</td>
 					{% if not is_granted('ROLE_GUEST') %}

@@ -224,7 +224,7 @@ class MainController extends Controller
         $oneInterval = $dates['oneInterval'];
         $allInterval = $dates['allInterval'];
         $heure = (int) $dateBefore->format('H');
-        $decalage = $heure - 24;
+        $decalage = $this->get('app.Tool')->getDecalage('Europe/Paris','UTC');
         if ($limit == "day-2" or $limit == "day-3" or $limit == "yesterday" or $limit == "today"){
             $perform_list[] = array(
                 'time' => 'Total',

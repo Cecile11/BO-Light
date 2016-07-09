@@ -22,7 +22,16 @@ class Tool{
 		$ts = $ts + (24 - $hour)*3600;
 		$dateTime->setTimestamp($ts);
 		return $dateTime;
-	} 
+	}
+
+    public function getDecalage($remote_tz,$origin_tz){
+        $origin_dtz = new DateTimeZone($origin_tz);
+        $remote_dtz = new DateTimeZone($remote_tz);
+        $origin_dt = new DateTime("now", $origin_dtz);
+        $remote_dt = new DateTime("now", $remote_dtz);
+        $offset = $origin_dtz->getOffset($origin_dt) - $remote_dtz->getOffset($remote_dt);
+    return $offset/3600;
+    }
 
 	public function getDates($limit){
         $utc = new DateTimeZone('UTC');

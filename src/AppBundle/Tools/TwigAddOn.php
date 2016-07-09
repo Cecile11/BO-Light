@@ -2,6 +2,7 @@
 namespace AppBundle\Tools;
 use NumberFormatter;
 use DateTimeZone;
+use DateTime;
 class TwigAddOn extends \Twig_Extension{
 
 	private $security;
@@ -100,7 +101,12 @@ class TwigAddOn extends \Twig_Extension{
 		}
 	}
 
-	public function localizedDate($date,$timeZone,$format){
+	public function localizedDate($currentValue,$timeZone,$format){	
+		if ($currentValue instanceof DateTime){
+			$date = $currentValue;
+		} else {
+			$date = DateTime::createFromFormat(DateTime::W3C,$currentValue);
+		}
 		$date->setTimezone(new DateTimeZone($timeZone));
 		return $date->format($format);
 	}

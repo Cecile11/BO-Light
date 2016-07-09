@@ -297,7 +297,7 @@ class MainController extends Controller
                 }
             return $this->render('salesMonth.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','day_list'=>$day_list));
             }else{
-                return $this->render('sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales'));
+                return $this->render('sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','decalage'=>-2));
             }
         }
     }

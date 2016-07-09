@@ -91,12 +91,21 @@ class TwigAddOn extends \Twig_Extension{
 		}
 	}
 
+	public function filtreZeroPlus($currency){
+			if ($currency == "0.00" or $currency == 0){
+			return "";
+		}else{
+			return '('.((string) $currency).')';
+		}
+	}
+
 	public function getFilters(){
 		return array(
 			'obfMail' => new \Twig_SimpleFilter('obfMail', array($this, 'obfMail')),
 			'obfData' => new \Twig_SimpleFilter('obfData', array($this, 'obfData')),
 			'getLines' => new \Twig_SimpleFilter('getLines', array($this, 'getLines')),
-			'filtreZero' => new \Twig_SimpleFilter('filtreZero', array($this, 'filtreZero'))
+			'filtreZero' => new \Twig_SimpleFilter('filtreZero', array($this, 'filtreZero')),
+			'filtreZeroPlus' => new \Twig_SimpleFilter('filtreZeroPlus', array($this, 'filtreZeroPlus'))
 		);
 	}
 

@@ -254,7 +254,7 @@ class MainController extends Controller
                 $day_list = array();
                 $oneWeek = new DateInterval('P8D');
                 $dateBefore->add($oneWeek);
-                $dateBefore->sub($oneInterval);
+                $dateBefore->sub($allInterval);
                 for ($i=1; $i < 9; $i++) {
                     $day_list[$i] = $dateBefore->format('l')." ".$dateBefore->format('d/m');
                     $performDay = array_merge($performDay,array(

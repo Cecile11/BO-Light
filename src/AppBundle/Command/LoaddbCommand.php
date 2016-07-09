@@ -32,10 +32,8 @@ class LoaddbCommand extends ContainerAwareCommand
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $db = $db = new SQLite3($input->getArgument('db'));
         $lastDate = $em->getRepository('AppBundle:Ipn')->getLastDate();
-        $date = new DateTime($lastDate,$utc);
-        $lastDate = $date->format('YmdHis');
         if ($lastDate){
-            $stmt = $db->prepare('SELECT * FROM ipn WHERE ipn.vads_effective_creation_date   > :lastdate');
+            $stmt = $db->prepare('SELECT * FROM ipn WHERE ipn.ts > :lastdate');
             $stmt->bindValue('lastdate',$lastDate,SQLITE3_TEXT);
             $result = $stmt->execute();
         } else{

@@ -235,8 +235,11 @@ class MainController extends Controller
             $dateBefore->add($allInterval);
             $dateBefore->sub($oneInterval);
             while($dateAfter > $dateFin) {
+                $dateBefore->setTimeZone(new DateTimeZone('Europe/Paris'));
+                $date = $dateBefore->format('H:i');
+                $dateBefore->setTimeZone(new DateTimeZone('UTC'));
                 $perform_list[] = array(
-                    'time' => $dateBefore->format('H:i'),
+                    'time' => $date,
                     'ttAmount'=>number_format($rp->findTtAmount($dateBefore,$dateAfter)/100,2,'.',' '),
                     'nbCommands' => $rp->findNbCommand($dateBefore,$dateAfter),
                     'nbClients' => $rp->findNbClient($dateBefore,$dateAfter),
@@ -256,7 +259,9 @@ class MainController extends Controller
                 $dateBefore->add($oneWeek);
                 $dateBefore->sub($allInterval);
                 for ($i=1; $i < 9; $i++) {
+                    $dateBefore->setTimeZone(new DateTimeZone('Europe/Paris'));
                     $day_list[$i] = $dateBefore->format('l')." ".$dateBefore->format('d/m');
+                    $dateBefore->setTimeZone(new DateTimeZone('UTC'));
                     $performDay = array_merge($performDay,array(
                         'ttAmount'.$i=>number_format($rp->findTtAmount($dateBefore,$dateAfter)/100,2,'.',' '),
                         'nbCommands'.$i=>$rp->findNbAccepted($dateBefore,$dateAfter)
@@ -269,8 +274,10 @@ class MainController extends Controller
                 $dateBefore->add($oneWeek);
                 $dateBefore->add($allInterval);
                 $dateBefore->sub($oneInterval);
-                for ($i=0; $i < 24 ; $i++) { 
+                for ($i=0; $i < 24 ; $i++) {
+                    $dateBefore->setTimeZone(new DateTimeZone('Europe/Paris'));
                     $performDay = array('time'=>$dateBefore->format('H:i'));
+                    $dateBefore->setTimeZone(new DateTimeZone('UTC'));
                     for ($j=1; $j < 9; $j++) {
                         $performDay = array_merge($performDay,array(
                             'ttAmount'.$j=>number_format($rp->findTtAmount($dateBefore,$dateAfter)/100,2,'.',' '),

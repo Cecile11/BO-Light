@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Tools;
 use NumberFormatter;
+use DateTimeZone;
 class TwigAddOn extends \Twig_Extension{
 
 	private $security;
@@ -99,13 +100,19 @@ class TwigAddOn extends \Twig_Extension{
 		}
 	}
 
+	public function localizedDate($date,$timeZone,$format){
+		$date->setTimezone(new DateTimeZone($timeZone));
+		return $date->format($format);
+	}
+
 	public function getFilters(){
 		return array(
 			'obfMail' => new \Twig_SimpleFilter('obfMail', array($this, 'obfMail')),
 			'obfData' => new \Twig_SimpleFilter('obfData', array($this, 'obfData')),
 			'getLines' => new \Twig_SimpleFilter('getLines', array($this, 'getLines')),
 			'filtreZero' => new \Twig_SimpleFilter('filtreZero', array($this, 'filtreZero')),
-			'filtreZeroPlus' => new \Twig_SimpleFilter('filtreZeroPlus', array($this, 'filtreZeroPlus'))
+			'filtreZeroPlus' => new \Twig_SimpleFilter('filtreZeroPlus', array($this, 'filtreZeroPlus')),
+			'localizedDate' => new \Twig_SimpleFilter('localizedDate', array($this, 'localizedDate'))
 		);
 	}
 

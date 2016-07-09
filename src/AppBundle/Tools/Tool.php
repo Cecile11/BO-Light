@@ -26,10 +26,12 @@ class Tool{
 
 	public function getDates($limit){
         $utc = new DateTimeZone('UTC');
-		$dateAfter = new DateTime(null,$utc);
+		$dateAfter = new DateTime(null, new DateTimeZone('Europe/Paris'));
         $this->roundDateDayUp($dateAfter);
-        $dateBefore = new DateTime(null,$utc);
+        $dateBefore = new DateTime(null, new DateTimeZone('Europe/Paris'));
         $this->roundDateDayUp($dateBefore);
+        $dateAfter->setTimezone($utc);
+        $dateBefore->setTimezone($utc);
         switch ($limit) {
             case 'day-2':
                 $oneInterval = new DateInterval('PT1H');

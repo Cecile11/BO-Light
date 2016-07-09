@@ -44,7 +44,7 @@
 					<button type="button" class="btn-sm btn-primary" data-container="body" data-toggle="popover" data-placement="auto right" data-content="{{ipn.full|obfData|getLines}}" data-original-title="All parameters" title="All parameters"  data-html="true">Details</button> 
 				</td>
 				<td>{{ipn.vadsOrderId}}</td>
-				<td>{{ipn.vadsEffectiveCreationDate|date('Y-m-d H:i:s')}}<br/><small>{{ipn.ts|date('Y-m-d H:i:s')}}</small></td>
+				<td>{{ipn.vadsEffectiveCreationDate|localizedDate('Europe/Paris','Y-m-d H:i:s')}}<br/><small>{{ipn.ts|localizedDate('Europe/Paris','Y-m-d H:i:s')}}</small></td>
 				<td>{{ipn.vadsTransUuid}}<br><small>{{ipn.vadsTransId}}</small></td>
 				<td>
 					{{ipn.vadsEffectiveAmount}}

@@ -110,9 +110,10 @@ class MainController extends Controller
      */
     public function listIpnAction(Request $request,$limit="today"){
         $dates = $this->get('app.Tool')->getDates($limit);
+        $decalage = $this->get('app.Tool')->getDecalage('UTC','Europe/Paris');
         $pagination = $this->getDoctrine()->getRepository('AppBundle:Ipn')->findAllIpn($dates);
 
-        return $this->render('list.html.twig',array('pagination' => $pagination,'limit'=>$limit,'url'=>'list'));
+        return $this->render('list.html.twig',array('pagination' => $pagination,'limit'=>$limit,'url'=>'list','decalage'=>$decalage));
     }
 
     /**
@@ -120,6 +121,7 @@ class MainController extends Controller
      * @Security("has_role('ROLE_USER')")
      */
     public function listPaymentAction(Request $request,$client = null,$limit="today"){
+        $decalage = $this->get('app.Tool')->getDecalage('UTC','Europe/Paris');
         $em = $this->getDoctrine()->getManager();
         $tool = $this->get('app.Tool');
         if ($client){
@@ -169,8 +171,8 @@ class MainController extends Controller
                             $payment->setVadsEffectiveAmount($data->paymentResponse->amount);
                             $payment->setVadsRefundAmount(isset($data->captureResponse->refundAmount) ? $data->captureResponse->refundAmount : 0);
                             $payment->setVadsPaymentType($data->paymentResponse->paymentType);
-                            $payment->setVadsOperationType($data->paymentResponse->operationType == 0 ? 'DEBIT' : 'CREDIT');
-
+                            $payment->setVadsOperationType($data->paymentResponse->operationType == 0 or $data->paymentResponse->operationType == '0' ? 'DEBIT' : 'CREDIT');
+                            $payment->setVadsCurrency($data->paymentResponse->currency);
                             $em->persist($payment);
                             $em->flush();
                             $i++;
@@ -182,7 +184,7 @@ class MainController extends Controller
             }
         }
         
-        return $this->render('payment_list.html.twig',array('payment_list'=>$payment_list,'limit'=>$limit,'url'=>'payment'));
+        return $this->render('payment_list.html.twig',array('payment_list'=>$payment_list,'limit'=>$limit,'url'=>'payment','decalage'=>$decalage));
     }
 
     /**
@@ -224,7 +226,6 @@ class MainController extends Controller
         $oneInterval = $dates['oneInterval'];
         $allInterval = $dates['allInterval'];
         $heure = (int) $dateBefore->format('H');
-        $decalage = $this->get('app.Tool')->getDecalage('Europe/Paris','UTC');
         if ($limit == "day-2" or $limit == "day-3" or $limit == "yesterday" or $limit == "today"){
             $perform_list[] = array(
                 'time' => 'Total',
@@ -252,7 +253,7 @@ class MainController extends Controller
                 $dateAfter->sub($oneInterval);
                 $dateBefore->sub($oneInterval);
             }
-            return $this->render('sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','decalage'=>$decalage));
+            return $this->render('sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales'));
         }else{
             if ($limit == "week"){
                 //Total
@@ -297,7 +298,7 @@ class MainController extends Controller
                 }
             return $this->render('salesMonth.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','day_list'=>$day_list));
             }else{
-                return $this->render('sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','decalage'=>-2));
+                return $this->render('sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales'));
             }
         }
     }

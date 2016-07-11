@@ -22,7 +22,7 @@
 				<td><strong> uuid </strong><br><small> transactionID </small></td>
 				<td><strong> OrderID </strong><br><small> Ref Client | Détails </small></td>
 				<td><strong> Amount </strong><br><small> Modified </small></td>
-				<td><strong> CreationDate </strong><br><small> LastDate </small></td>
+				<td><strong> CreationDate UTC{% if decalage > 0 %}+{% endif %}{{decalage}}</strong><br><small> LastDate UTC{% if decalage > 0 %}+{% endif %}{{decalage}}</small></td>
 				<td><strong>Status</strong></td>
 				<td><strong>Type</strong></td>
 				<td><strong>Brand</strong></td>
@@ -41,7 +41,7 @@
 				<td>{{payment.data.paymentResponse.amount}}<br><small>{{((payment.data.paymentResponse.amount)/100)}}/{{payment.data.paymentResponse.currency}}</small></td>
 				<td>{{payment.vadsEffectiveCreationDate|localizedDate('Europe/Paris','Y-m-d H:i:s')}}<br/><small>{{payment.data.paymentResponse.expectedCaptureDate|localizedDate('Europe/Paris','Y-m-d H:i:s')}}</small></td>
 				<td>{{payment.data.commonResponse.transactionStatusLabel}}</td>
-				<td>{{payment.vadsPaymentType == 'RETRY' ? "CREDIT" : "DEBIT"}}</td>
+				<td>{{payment.vadsOperationType == 0 ? "DEBIT" : "CREDIT"}}</td>
 				<td>{{payment.data.cardResponse.brand}}</td>
 				<td>{{payment.data.customerResponse.billingDetails.email|obfMail('exemple.com')}}</td>
 			</tr>

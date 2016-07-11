@@ -33,7 +33,7 @@ class SuperController extends Controller
      */
     public function purgeDataAction(Request $request){
     	$em = $this->getDoctrine()->getManager();
-    	$query = $em->createQuery('DELETE AppBundle:Ipn');
+    	$query = $em->createQuery('DELETE * FROM AppBundle:Ipn');
     	$query->getResult();
     	$query = $query = $em->createQuery('DELETE AppBundle:Payment');
     	$query->getResult();
@@ -57,8 +57,10 @@ class SuperController extends Controller
      */
     public function getPaymentAction(Request $request){
         $em = $this->getDoctrine()->getManager();
-        $ipn_list = $em->getRepository('AppBundle:Ipn')->getLast($request->request->get('number'));
+        $limit = strtolower($request->request->get('limit'));
+        $ipn_list = $em->getRepository('AppBundle:Ipn')->getLast($request->request->get('number'),$this->get('app.Tool')->getDates($limit));
         $i = 1;
+
         ob_start();
         foreach ($ipn_list as $ipn) {
             $uuid = $ipn['vadsTransUuid'];
@@ -95,7 +97,8 @@ class SuperController extends Controller
                     $payment->setVadsEffectiveAmount($data->paymentResponse->amount);
                     $payment->setVadsRefundAmount(isset($data->captureResponse->refundAmount) ? $data->captureResponse->refundAmount : 0);
                     $payment->setVadsPaymentType($data->paymentResponse->paymentType);
-                    $payment->setVadsOperationType($data->paymentResponse->operationType == 0 ? 'DEBIT' : 'CREDIT');
+                    $payment->setVadsOperationType($data->paymentResponse->operationType);
+                    $payment->setVadsCurrency($data->paymentResponse->currency);
                     $em->persist($payment);
                     $em->flush();
                     $i++;
@@ -103,7 +106,7 @@ class SuperController extends Controller
             }
         }
         ob_clean();
-        return new Response("Payment loaded");
+        return new Response($limit);
     }
 
     /**

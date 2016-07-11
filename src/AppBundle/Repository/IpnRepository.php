@@ -26,8 +26,8 @@ class IpnRepository extends EntityRepository
 		return $qb->where("ipn.vadsCtxMode = 'PRODUCTION'")->orderBy('ipn.vadsEffectiveCreationDate','DESC')->andWhere('ipn.vadsEffectiveCreationDate > ?1')->andWhere('ipn.vadsEffectiveCreationDate < ?2')->setParameters(array(1=>$dates['dateBefore'],2=>$dates['dateAfter']))->getQuery()->getResult();
 	}
 
-	public function getLast($limit){
-		$query = $this->getEntityManager()->createQuery("SELECT ipn.vadsTransUuid, ipn.vadsSiteId FROM AppBundle:Ipn ipn WHERE ipn.vadsCtxMode = 'PRODUCTION' AND ipn.vadsTransUuid NOT IN (SELECT payment.uuid FROM AppBundle:Payment payment) ORDER BY ipn.vadsEffectiveCreationDate DESC")->setMaxResults($limit);
+	public function getLast($limit,$dates){
+		$query = $this->getEntityManager()->createQuery("SELECT ipn.vadsTransUuid, ipn.vadsSiteId FROM AppBundle:Ipn ipn WHERE ipn.vadsCtxMode = 'PRODUCTION' AND ipn.vadsEffectiveCreationDate > ?1 AND ipn.vadsEffectiveCreationDate < ?2 AND ipn.vadsTransUuid NOT IN (SELECT payment.uuid FROM AppBundle:Payment payment) ORDER BY ipn.vadsEffectiveCreationDate DESC")->setMaxResults($limit)->setParameters(array(1=>$dates['dateBefore'],2=>$dates['dateAfter']));
 		return $query->getResult();
 	}
 

@@ -26,7 +26,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script>
-function getPayment(i,max){
+function getPayment(i,max,limit){
 	var pbar = $('#progressPayment');
 	if (i >= max){
 		pbar.attr('class','progress-bar-success progress-bar-striped');
@@ -36,13 +36,13 @@ function getPayment(i,max){
 		$.ajax({
 			url:$(location).attr('href') + '/get_payment',
 			method:'POST',
-			data:{'number':nb}
+			data:{'number':nb,'limit':limit}
 		}).done(function(data){
 			pbar.attr('aria-valuenow',i+nb);
 			var pourcentage = Math.floor((i+nb)/max*100);
 			pbar.attr('style','width:'+pourcentage+'%');
 			$('#progressPayment span').html(i+nb+"/"+max+" loaded");
-			getPayment(i+nb,max);
+			getPayment(i+nb,max,limit);
 		}).fail(function( jqXHR, textStatus ) {
  			console.log( "Request failed: " + textStatus );
 		});
@@ -71,7 +71,7 @@ $(document).ready(function(){
 			var max = $('#numberPayment').val()*1;
 			$('#progressPayment').attr('aria-valuemax',max);
 			$('#progressPayment span').html('starting : '+max+' will be loaded');
-			getPayment(0,max);
+			getPayment(0,max,'quarter');
 	});
 	$('.getPaymentFrom').on('click',function(){
 		var time = $(this).html();
@@ -84,7 +84,7 @@ $(document).ready(function(){
 			console.log(data);
 			$('#progressPayment').attr('aria-valuemax',data*1);
 			$('#progressPayment span').html('starting : '+data+' will be loaded');
-			getPayment(0,data*1);
+			getPayment(0,data*1,time);
 
 		}).fail(function(jqXHR, textStatus){
 			console.log( "Request failed: " + textStatus );

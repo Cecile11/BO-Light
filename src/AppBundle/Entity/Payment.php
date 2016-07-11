@@ -95,6 +95,12 @@ class Payment
      * @ORM\Column(name="vads_operation_type", type="string", length=255,nullable=true)
      */
     private $vadsOperationType;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="vads_currency", type="string", length=255,nullable=true)
+     */
+    private $vadsCurrency;
 
     /**
      * Get id
@@ -368,5 +374,29 @@ class Payment
     public function getVadsOperationType()
     {
         return $this->vadsOperationType;
+    }
+
+    /**
+     * Set vadsCurrency
+     *
+     * @param string $vadsCurrency
+     *
+     * @return Payment
+     */
+    public function setVadsCurrency($vadsCurrency)
+    {
+        $this->vadsCurrency = $vadsCurrency;
+
+        return $this;
+    }
+
+    /**
+     * Get vadsCurrency
+     *
+     * @return string
+     */
+    public function getVadsCurrency()
+    {
+        return $this->vadsCurrency;
     }
 }

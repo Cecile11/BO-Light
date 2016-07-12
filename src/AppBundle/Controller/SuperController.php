@@ -33,7 +33,7 @@ class SuperController extends Controller
      */
     public function purgeDataAction(Request $request){
     	$em = $this->getDoctrine()->getManager();
-    	$query = $em->createQuery('DELETE * FROM AppBundle:Ipn');
+    	$query = $em->createQuery('DELETE AppBundle:Ipn');
     	$query->getResult();
     	return new Response('Ipn delete');
     }
@@ -129,7 +129,7 @@ class SuperController extends Controller
         $payment = $this->getDoctrine()->getManager()->getRepository('AppBundle:Payment')->findOneByUuid($uuid);
         if(!$payment){
             if($this->get('app.Loader')->loadPayment($uuid)){
-                $message = "Payment load";
+                $message = "Payment loaded";
             } else {
                 $message = "Can't load payment";
             }

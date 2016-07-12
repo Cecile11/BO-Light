@@ -12,6 +12,9 @@ services:
     app.PayzenWSv5:
         class: AppBundle\PayzenWSv5\PayzenWSv5
         arguments: [@app.Config]
+    app.Loader:
+        class: AppBundle\PayzenWSv5\Loader
+        arguments: [@doctrine.orm.entity_manager,@app.PayzenWSv5]
     app.twig.extension.TwigAddOn:
         class: AppBundle\Tools\TwigAddOn
         arguments: [@security.context]

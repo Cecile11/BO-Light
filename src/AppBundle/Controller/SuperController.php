@@ -23,8 +23,8 @@ class SuperController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('super_option.html.twig');
+        $siteIdList = $this->get('app.Config')->getSiteIdList();
+        return $this->render('super_option.html.twig',array('site_id_list'=>$siteIdList));
     }
 
     /**
@@ -35,9 +35,7 @@ class SuperController extends Controller
     	$em = $this->getDoctrine()->getManager();
     	$query = $em->createQuery('DELETE * FROM AppBundle:Ipn');
     	$query->getResult();
-    	$query = $query = $em->createQuery('DELETE AppBundle:Payment');
-    	$query->getResult();
-    	return new Response('Database purged');
+    	return new Response('Ipn delete');
     }
 
     /**
@@ -60,7 +58,6 @@ class SuperController extends Controller
         $limit = strtolower($request->request->get('limit'));
         $ipn_list = $em->getRepository('AppBundle:Ipn')->getLast($request->request->get('number'),$this->get('app.Tool')->getDates($limit));
         $i = 1;
-
         ob_start();
         foreach ($ipn_list as $ipn) {
             $uuid = $ipn['vadsTransUuid'];
@@ -70,39 +67,11 @@ class SuperController extends Controller
                     sleep(5);
                 }
                 $request->attributes->set('site_id',$ipn['vadsSiteId']);
-                $vads = $this->get("app.PayzenWSv5");
-                $mode = $this->get("app.Config")->getMode();
-                sleep(2);
-                
-                try {
-                    $response = $vads->getPaymentDetails($uuid);
+                $test = $this->get('app.Loader')->loadPayment($uuid);
+                if (!$test){
+                    throw new Exception("Can't load payment");
                 }
-                catch (Exception $e) {
-                    spip_log("getPaymentDetailsResult : erreur ".$e->getMessage(),$mode."_LOG");
-                }
-                if ($e = $response->getPaymentDetailsResult->commonResponse->responseCode){
-                    spip_log($s="getPaymentDetailsResult $uuid : erreur $e : ".$response->getPaymentDetailsResult->commonResponse->responseCodeDetail,$mode."_LOG_RESP");
-                }else{
-                    $data = $response->getPaymentDetailsResult;
-                    $payment = new Payment();
-                    $payment->setUuid($uuid);
-                    $payment->setData($data);
-                    $payment->setVadsCustId($data->customerResponse->billingDetails->reference);
-                    $payment->setVadsCustFirstName($data->customerResponse->billingDetails->firstName);
-                    $payment->setVadsCustLastName($data->customerResponse->billingDetails->lastName);
-                    $payment->setVadsTransStatus($data->commonResponse->transactionStatusLabel);
-                    $date = DateTime::createFromFormat(DateTime::W3C,$data->paymentResponse->creationDate,new DateTimeZone('Europe/Paris'));
-                    $date->setTimezone(new DateTimeZone('UTC'));
-                    $payment->setVadsEffectiveCreationDate($date);
-                    $payment->setVadsEffectiveAmount($data->paymentResponse->amount);
-                    $payment->setVadsRefundAmount(isset($data->captureResponse->refundAmount) ? $data->captureResponse->refundAmount : 0);
-                    $payment->setVadsPaymentType($data->paymentResponse->paymentType);
-                    $payment->setVadsOperationType($data->paymentResponse->operationType);
-                    $payment->setVadsCurrency($data->paymentResponse->currency);
-                    $em->persist($payment);
-                    $em->flush();
-                    $i++;
-                }
+                $i++;
             }
         }
         ob_clean();
@@ -146,5 +115,29 @@ class SuperController extends Controller
         $dates = $this->get('app.Tool')->getDates($limit);
         $payment_list = $this->getDoctrine()->getManager()->getRepository('AppBundle:Payment')->findAllByDate($dates['dateBefore'],$dates['dateAfter']);
         return $this->render('payment_table.html.twig',array('payment_list'=>$payment_list,'limit'=>$limit,'url'=>'payment_table'));
+    }
+
+    /**
+     * @Route("/super_option/payment_from_uuid",name="get_payment_from_uuid")
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     */
+    public function getPaymentFromUuidAction(Request $request){
+        ob_start();
+        $uuid = $request->request->get('uuid');
+        $siteId = $request->request->get('site_id');
+        $request->attributes->set('site_id',$siteId);
+        $payment = $this->getDoctrine()->getManager()->getRepository('AppBundle:Payment')->findOneByUuid($uuid);
+        if(!$payment){
+            if($this->get('app.Loader')->loadPayment($uuid)){
+                $message = "Payment load";
+            } else {
+                $message = "Can't load payment";
+            }
+        } else {
+            $message = "Payment already loaded";
+        }
+        ob_clean();
+        $siteIdList = $this->get('app.Config')->getSiteIdList();
+        return $this->render('super_option.html.twig',array('site_id_list'=>$siteIdList,'message'=>$message));
     }
 }

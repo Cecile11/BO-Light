@@ -22,16 +22,17 @@ class Config{
 
 	private $config;
 	private $mode;
+	private $iniValues;
 
 	public function __construct($requestStack){
 		// A changer en mode prod ( possibilité de parser des fichier ect)
-		$iniValues = parse_ini_file(__DIR__."/../../../app/Resources/key.ini",true);
-		$idKey     = array_keys($iniValues);
-		$id =  array_search($requestStack->getCurrentRequest()->attributes->get('site_id'),array_column($iniValues, 'site_id')); // Payzen ShopID
-		$this->config['SITE_ID'] = $iniValues[$idKey[$id]]['site_id'];		
+		$this->iniValues = parse_ini_file(__DIR__."/../../../app/Resources/key.ini",true);
+		$idKey     = array_keys($this->iniValues);
+		$id =  array_search($requestStack->getCurrentRequest()->attributes->get('site_id'),array_column($this->iniValues, 'site_id')); // Payzen ShopID
+		$this->config['SITE_ID'] = $this->iniValues[$idKey[$id]]['site_id'];		
 		$this->config['mode_test'] =  null;  // define if payzen will be called in TEST mode
-		$this->config['CLE_test']  =  $iniValues[$idKey[$id]]['key_test']; // Payzen TEST key
-		$this->config['CLE']       =  $iniValues[$idKey[$id]]['key_prod'];   // Payzen PRODUCTION key
+		$this->config['CLE_test']  =  $this->iniValues[$idKey[$id]]['key_test']; // Payzen TEST key
+		$this->config['CLE']       =  isset($this->iniValues[$idKey[$id]]['key_prod']) ? $this->iniValues[$idKey[$id]]['key_prod'] : null;   // Payzen PRODUCTION key
 		$this->mode   =  'inter';
 	}
 	public function getConfig(){
@@ -46,6 +47,10 @@ class Config{
 		} else {
 			return $this->config['CLE'];
 		}
+	}
+
+	public function getSiteIdList(){
+		return array_column($this->iniValues,'site_id');
 	}
 }
 

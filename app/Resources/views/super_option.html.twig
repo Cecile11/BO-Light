@@ -7,7 +7,7 @@
 {% endblock %}
 {% block body %}
 <h2> Super Admin Option </h2>
-	<button class="btn btn-danger" id="delete">Delete database</button><button class="btn btn-danger" id="deletePayment">Delete Payment</button><br>
+	<button class="btn btn-danger" id="delete">Delete Ipn</button><button class="btn btn-danger" id="deletePayment">Delete Payment</button><br>
 		<label>Nombre de payment a charger : <input type='number' id="numberPayment" value=50></label>
 		<button class="btn btn-primary" id="getPayment">Go</button>
 		<button class="btn btn-primary getPaymentFrom">Today</button>
@@ -20,7 +20,17 @@
 	</div>
 	<br>
 	<button class="btn btn-primary" id = "loaddb">Import Ipn</button><br>
+	<button class="btn btn-primary" id = "reloaddb">Reload Ipn</button><br>
 	<a href="{{ path('payment_table')}}"><button class="btn btn-primary">Payment table</button></a>
+<form action="{{path('get_payment_from_uuid')}}" method="POST">
+	<label>Transaction Uuid : <input name ="uuid" type="text"/></label>
+	<label> Site Id : <select name="site_id" >
+	{% for siteId in site_id_list %}
+	<option value="{{siteId}}">{{siteId}}</option>
+	{% endfor %}
+	</select></label>
+	<button type="submit">Load</button>{% if message is defined %}<p>{{message}}</p>{% endif %}
+</form>
 {% endblock %}
 {% block javascripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -98,6 +108,19 @@ $(document).ready(function(){
 			alert("Ipn loaded");
 		}).fail(function( jqXHR, textStatus ) {
  			console.log( "Request failed: " + textStatus );
+		});
+	});
+	$('#reloaddb').on('click',function(){
+		$.ajax({
+			url:$(location).attr('href') + '/delete'
+		}).done(function(data){
+			alert(data + " Ipn will be loaded");
+			$.ajax({
+				url:$(location).attr('href') +'/loaddb'
+			}).done(function(data){
+				console.log(data);
+				alert('Ipn Loaded');
+			});
 		});
 	});
 });

@@ -13,53 +13,71 @@ class PaymentRepository extends \Doctrine\ORM\EntityRepository
 {
 	public function findAllByDate(DateTime $dateBefore,DateTime $dateAfter){
 		$qb = $this->createQueryBuilder('payment');
-		return $qb->where('payment.vadsEffectiveCreationDate < ?1')->andWhere('payment.vadsEffectiveCreationDate > ?2')->andWhere("payment.vadsOperationType != 'CREDIT'")->setParameters(array(1=>$dateAfter,2=>$dateBefore))->getQuery()->getResult();
+		return $qb->where('payment.vadsEffectiveCreationDate < ?1')->andWhere('payment.vadsEffectiveCreationDate > ?2')->andWhere("payment.vadsOperationType = '0'")->setParameters(array(1=>$dateAfter,2=>$dateBefore))->getQuery()->getResult();
 	}
 
 	public function findAllClientByDate($dates){
 		$qb = $this->createQueryBuilder('payment');
-		return $qb->select('DISTINCT payment.vadsCustId, payment.vadsCustFirstName, payment.vadsCustLastName')->where('payment.vadsEffectiveCreationDate > ?1')->andWhere('payment.vadsEffectiveCreationDate < ?2')->andWhere("payment.vadsOperationType != 'CREDIT'")->setParameters(array(1=>$dates['dateBefore'],2=>$dates['dateAfter']))->orderBy('payment.vadsEffectiveCreationDate','DESC')->getQuery()->getResult();
+		return $qb->select('DISTINCT payment.vadsCustId, payment.vadsCustFirstName, payment.vadsCustLastName')->where('payment.vadsEffectiveCreationDate > ?1')->andWhere('payment.vadsEffectiveCreationDate < ?2')->andWhere("payment.vadsOperationType = '0'")->setParameters(array(1=>$dates['dateBefore'],2=>$dates['dateAfter']))->orderBy('payment.vadsEffectiveCreationDate','DESC')->getQuery()->getResult();
+	}
+
+	public function findNbAcceptedClient($client,$dates){
+		$qb = $this->createQueryBuilder('payment');
+		return $qb->select('COUNT(DISTINCT payment.uuid)')->where('payment.vadsEffectiveCreationDate > ?1 ')->andWhere("payment.vadsCustId = ?2")->setParameter(2,$client)->andWhere('payment.vadsEffectiveCreationDate < ?3 ')->andWhere("payment.vadsOperationType = '0'")->setParameters(array(1=>$dates['dateBefore'],2=>$client,3=>$dates['dateAfter']))->andWhere("payment.vadsTransStatus != 'REFUSED'")->getQuery()->getSingleScalarResult();
 	}
 	
 	public function findNbCommandClient($client,$dates){
-		$qb = $this->createQueryBuilder('payment');
-		return $qb->select('COUNT(DISTINCT payment.uuid)')->where('payment.vadsEffectiveCreationDate > ?1 ')->andWhere("payment.vadsCustId = ?2")->setParameter(2,$client)->andWhere('payment.vadsEffectiveCreationDate < ?3 ')->andWhere("payment.vadsOperationType != 'CREDIT'")->setParameters(array(1=>$dates['dateBefore'],2=>$client,3=>$dates['dateAfter']))->getQuery()->getSingleScalarResult();
+		return $this->findNbAcceptedClient($client,$dates) + $this->findNbRefusedClient($client,$dates);
 	}
 
 	public function findNbRefusedClient($client,$dates){
 		$qb = $this->createQueryBuilder('payment');
-		return $qb->select('COUNT(DISTINCT payment.uuid)')->where('payment.vadsEffectiveCreationDate > ?1 ')->andWhere("payment.vadsCustId = ?2")->setParameter(2,$client)->andWhere('payment.vadsEffectiveCreationDate < ?3 ')->andWhere("payment.vadsOperationType != 'CREDIT'")->setParameters(array(1=>$dates['dateBefore'],2=>$client,3=>$dates['dateAfter']))->andWhere("payment.vadsTransStatus = 'REFUSED'")->getQuery()->getSingleScalarResult();
+		return count($qb->select('SUBSTRING(payment.vadsEffectiveCreationDate,1,10) AS pDay')->where('payment.vadsEffectiveCreationDate > ?1 ')->andWhere("payment.vadsCustId = ?2")->setParameter(2,$client)->andWhere('payment.vadsEffectiveCreationDate < ?3 ')->andWhere("payment.vadsOperationType = '0'")->setParameters(array(1=>$dates['dateBefore'],2=>$client,3=>$dates['dateAfter']))->andWhere("payment.vadsTransStatus = 'REFUSED'")->groupBy('pDay')->getQuery()->getResult());
 	}
 
 	public function findTtAmountClient($client,$dates){
 		$qb = $this->createQueryBuilder('payment');
-		return $qb->select('SUM(payment.vadsEffectiveAmount)')->where('payment.vadsEffectiveCreationDate > ?1 ')->andWhere("payment.vadsCustId = ?2")->setParameter(2,$client)->andWhere('payment.vadsEffectiveCreationDate < ?3 ')->andWhere("payment.vadsOperationType != 'CREDIT'")->andWhere("payment.vadsTransStatus != 'REFUSED'")->setParameters(array(1=>$dates['dateBefore'],2=>$client,3=>$dates['dateAfter']))->getQuery()->getSingleScalarResult() + 0;
+		return $qb->select('SUM(payment.vadsEffectiveAmount)')->where('payment.vadsEffectiveCreationDate > ?1 ')->andWhere("payment.vadsCustId = ?2")->setParameter(2,$client)->andWhere('payment.vadsEffectiveCreationDate < ?3 ')->andWhere("payment.vadsOperationType = '0'")->andWhere("payment.vadsTransStatus != 'REFUSED'")->setParameters(array(1=>$dates['dateBefore'],2=>$client,3=>$dates['dateAfter']))->getQuery()->getSingleScalarResult() + 0;
 	}
 
 	public function findNbCommand(DateTime $dateBefore,DateTime $dateAfter){
-		$qb = $this->createQueryBuilder('payment');
-		return $qb->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->andWhere("payment.vadsOperationType != 'CREDIT'")->setParameter(2,$dateAfter)->select('COUNT(payment)')->getQuery()->getSingleScalarResult();
+		return $this->findNbAccepted($dateBefore,$dateAfter) + $this->findNbRefused($dateBefore,$dateAfter);
 	}
 
 	public function findNbClient(DateTime $dateBefore, DateTime $dateAfter){
 		$qb = $this->createQueryBuilder('payment');
-		return $qb->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->andWhere("payment.vadsOperationType != 'CREDIT'")->setParameter(2,$dateAfter)->select('COUNT(DISTINCT payment.vadsCustId)')->getQuery()->getSingleScalarResult();
+		return $qb->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->andWhere("payment.vadsOperationType = '0'")->setParameter(2,$dateAfter)->select('COUNT(DISTINCT payment.vadsCustId)')->getQuery()->getSingleScalarResult();
 	}
 
 	public function findNbAccepted(DateTime $dateBefore, DateTime $dateAfter){
 		$qb = $this->createQueryBuilder('payment');
 		$qb->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->setParameter(2,$dateAfter);
-		return $qb->select('COUNT(payment.uuid)')->andWhere("payment.vadsOperationType != 'CREDIT'")->andWhere("payment.vadsTransStatus != 'REFUSED'")->getQuery()->getSingleScalarResult() + 0;
+		return $qb->select('COUNT(payment.uuid)')->andWhere("payment.vadsOperationType = '0'")->andWhere("payment.vadsTransStatus != 'REFUSED'")->getQuery()->getSingleScalarResult() + 0;
 	}
 
 	public function findNbRefused(DateTime $dateBefore, DateTime $dateAfter){
 		$qb = $this->createQueryBuilder('payment');
-		return $qb->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->setParameter(2,$dateAfter)->select('COUNT(DISTINCT payment.uuid)')->andWhere("payment.vadsOperationType != 'CREDIT'")->andWhere("payment.vadsTransStatus = 'REFUSED'")->getQuery()->getSingleScalarResult();
+		$qb->select('DISTINCT payment.vadsCustId')->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->setParameter(2,$dateAfter)->andWhere("payment.vadsTransStatus = 'REFUSED'");
+		$client_list = $qb->getQuery()->getResult();
+		$total = 0;
+		foreach ($client_list as $row) {
+			$qb = $this->createQueryBuilder('payment');
+			$qb->select('COUNT(payment.uuid)')->where('payment.vadsEffectiveCreationDate >= ?1 ')->setParameter(1,$dateBefore->format("Y-m-d"))->andWhere('payment.vadsEffectiveCreationDate < ?2 ')->setParameter(2,$dateBefore)->andWhere("payment.vadsTransStatus = 'REFUSED'")->andWhere('payment.vadsCustId = ?3')->setParameter(3,$row['vadsCustId']);
+			if ($qb->getQuery()->getSingleScalarResult() == 0){
+				$total++;
+			}
+		}
+		return $total;
 	}
 
 	public function findTtAmount(DateTime $dateBefore,DateTime $dateAfter){
 		$qb = $this->createQueryBuilder('payment');
-		return $qb->select('SUM(payment.vadsEffectiveAmount)')->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->setParameter(2,$dateAfter)->andWhere("payment.vadsTransStatus != 'REFUSED'")->andWhere("payment.vadsOperationType != 'CREDIT'")->getQuery()->getSingleScalarResult() + 0;
+		return $qb->select('SUM(payment.vadsEffectiveAmount)')->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->setParameter(2,$dateAfter)->andWhere("payment.vadsTransStatus != 'REFUSED'")->andWhere("payment.vadsOperationType = '0'")->getQuery()->getSingleScalarResult() + 0;
+	}
+
+	public function findTtCredit(DateTime $dateBefore,DateTime $dateAfter){
+		$qb = $this->createQueryBuilder('payment');
+		return $qb->select('SUM(payment.vadsRefundAmount)')->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->setParameter(2,$dateAfter)->andWhere("payment.vadsTransStatus != 'REFUSED'")->andWhere("payment.vadsOperationType = '1'")->getQuery()->getSingleScalarResult() + 0;
 	}
 
 }

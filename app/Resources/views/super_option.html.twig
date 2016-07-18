@@ -12,6 +12,8 @@
 		<button class="btn btn-primary" id="getPayment">Go</button>
 		<button class="btn btn-primary getPaymentFrom">Today</button>
 		<button class="btn btn-primary getPaymentFrom">Yesterday</button>
+		<button class="btn btn-primary getPaymentFrom">Day-2</button>
+		<button class="btn btn-primary getPaymentFrom">Day-3</button>
 		<button class="btn btn-primary getPaymentFrom">Week</button>
 		<button class="btn btn-primary getPaymentFrom">Month</button>
 		<button class="btn btn-primary getPaymentFrom">Quarter</button>
@@ -20,7 +22,7 @@
 	</div>
 	<br>
 	<button class="btn btn-primary" id = "loaddb">Import Ipn</button><br>
-	<button class="btn btn-primary" id = "reloaddb">Reload Ipn</button><br>
+	<button class="btn btn-danger" id = "reloaddb">Reload Ipn</button><br>
 	<a href="{{ path('payment_table')}}"><button class="btn btn-primary">Payment table</button></a>
 <form action="{{path('get_payment_from_uuid')}}" method="POST">
 	<label>Transaction Uuid : <input name ="uuid" type="text"/></label>

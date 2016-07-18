@@ -214,10 +214,10 @@ class MainController extends Controller
     }
 
     /**
-     * @route("/sales/{limit}", name="sales")
+     * @route("/sales/{limit}/{offset}", name="sales")
      * @Security("has_role('ROLE_USER')")
      */
-    public function performanceAction($limit="today"){
+    public function performanceAction($limit="today",$offset=0){
         $rp = $this->getDoctrine()->getManager()->getRepository('AppBundle:Payment');
         $perform_list = array();
         $dates = $this->get('app.Tool')->getDates($limit);
@@ -260,6 +260,17 @@ class MainController extends Controller
                 $performDay = array('time'=>'Total');
                 $day_list = array();
                 $oneWeek = new DateInterval('P8D');
+                if ($offset < 0){
+                    for ($i=0; $i > $offset; $i--) { 
+                        $dateBefore->sub($allInterval);
+                        $dateAfter->sub($allInterval);
+                    }
+                }else{
+                    for ($i=0; $i < $offset; $i++) { 
+                        $dateBefore->add($allInterval);
+                        $dateAfter->add($allInterval);
+                    }
+                }
                 $dateBefore->add($oneWeek);
                 $dateBefore->sub($allInterval);
                 for ($i=1; $i < 9; $i++) {
@@ -296,7 +307,7 @@ class MainController extends Controller
                     $dateBefore->sub($oneInterval);
                 $perform_list[] = $performDay;
                 }
-            return $this->render('salesMonth.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','day_list'=>$day_list));
+            return $this->render('salesWeek.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','day_list'=>$day_list,'offset'=>$offset));
             }else{
                 return $this->render('sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales'));
             }

@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace CoreBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Entity\Payment;
+use CoreBundle\Entity\Payment;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -24,7 +24,7 @@ class SuperController extends Controller
     public function indexAction(Request $request)
     {
         $siteIdList = $this->get('app.Config')->getSiteIdList();
-        return $this->render('super_option.html.twig',array('site_id_list'=>$siteIdList));
+        return $this->render('CoreBundle:Core:super_option.html.twig',array('site_id_list'=>$siteIdList));
     }
 
     /**
@@ -33,7 +33,7 @@ class SuperController extends Controller
      */
     public function purgeDataAction(Request $request){
     	$em = $this->getDoctrine()->getManager();
-    	$query = $em->createQuery('DELETE AppBundle:Ipn');
+    	$query = $em->createQuery('DELETE CoreBundle:Ipn');
     	$query->getResult();
     	return new Response('Ipn delete');
     }
@@ -44,7 +44,7 @@ class SuperController extends Controller
      */
     public function purgePaymentAction(Request $request){
         $em = $this->getDoctrine()->getManager();
-        $query = $query = $em->createQuery('DELETE AppBundle:Payment');
+        $query = $query = $em->createQuery('DELETE CoreBundle:Payment');
         $query->getResult();
         return new Response('Payment delete');
     }
@@ -56,12 +56,12 @@ class SuperController extends Controller
     public function getPaymentAction(Request $request){
         $em = $this->getDoctrine()->getManager();
         $limit = strtolower($request->request->get('limit'));
-        $ipn_list = $em->getRepository('AppBundle:Ipn')->getLast($request->request->get('number'),$this->get('app.Tool')->getDates($limit));
+        $ipn_list = $em->getRepository('CoreBundle:Ipn')->getLast($request->request->get('number'),$this->get('app.Tool')->getDates($limit));
         $i = 1;
         ob_start();
         foreach ($ipn_list as $ipn) {
             $uuid = $ipn['vadsTransUuid'];
-            $payment = $em->getRepository('AppBundle:Payment')->findOneByUuid($uuid);
+            $payment = $em->getRepository('CoreBundle:Payment')->findOneByUuid($uuid);
             if(!$payment){
                 if($i%5 == 0){
                     sleep(5);
@@ -85,7 +85,7 @@ class SuperController extends Controller
     public function getPaymentFromAction(Request $request){
         $limit = strtolower($request->request->get('time'));
         $dates = $this->get('app.Tool')->getDates($limit);
-        return new Response($this->getDoctrine()->getManager()->getRepository('AppBundle:Ipn')->countDayIpn($dates));
+        return new Response($this->getDoctrine()->getManager()->getRepository('CoreBundle:Ipn')->countDayIpn($dates));
     }
 
     /**
@@ -113,8 +113,8 @@ class SuperController extends Controller
      */
     public function listPaymentAction(Request $request,$limit = "today"){
         $dates = $this->get('app.Tool')->getDates($limit);
-        $payment_list = $this->getDoctrine()->getManager()->getRepository('AppBundle:Payment')->findAllByDate($dates['dateBefore'],$dates['dateAfter']);
-        return $this->render('payment_table.html.twig',array('payment_list'=>$payment_list,'limit'=>$limit,'url'=>'payment_table'));
+        $payment_list = $this->getDoctrine()->getManager()->getRepository('CoreBundle:Payment')->findAllByDate($dates['dateBefore'],$dates['dateAfter']);
+        return $this->render('CoreBundle:Core:payment_table.html.twig',array('payment_list'=>$payment_list,'limit'=>$limit,'url'=>'payment_table'));
     }
 
     /**
@@ -126,7 +126,7 @@ class SuperController extends Controller
         $uuid = $request->request->get('uuid');
         $siteId = $request->request->get('site_id');
         $request->attributes->set('site_id',$siteId);
-        $payment = $this->getDoctrine()->getManager()->getRepository('AppBundle:Payment')->findOneByUuid($uuid);
+        $payment = $this->getDoctrine()->getManager()->getRepository('CoreBundle:Payment')->findOneByUuid($uuid);
         if(!$payment){
             if($this->get('app.Loader')->loadPayment($uuid)){
                 $message = "Payment loaded";
@@ -138,6 +138,6 @@ class SuperController extends Controller
         }
         ob_clean();
         $siteIdList = $this->get('app.Config')->getSiteIdList();
-        return $this->render('super_option.html.twig',array('site_id_list'=>$siteIdList,'message'=>$message));
+        return $this->render('CoreBundle:Core:super_option.html.twig',array('site_id_list'=>$siteIdList,'message'=>$message));
     }
 }

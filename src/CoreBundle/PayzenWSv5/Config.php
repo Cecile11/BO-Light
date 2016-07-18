@@ -16,7 +16,7 @@
 // define("WSDL_URL","https://demo.payzen.eu/vads-ws/v5?wsdl");
 
 // LOG prefix - keep spip_log compatibility
-namespace AppBundle\PayzenWSv5;
+namespace CoreBundle\PayzenWSv5;
 
 class Config{
 

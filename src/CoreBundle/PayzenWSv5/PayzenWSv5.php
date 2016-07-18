@@ -7,7 +7,7 @@
  * @copyright 
  * 
  */
-namespace AppBundle\PayzenWSv5;
+namespace CoreBundle\PayzenWSv5;
 
 use SoapClient;
 use DateTime;

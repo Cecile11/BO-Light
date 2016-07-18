@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Tools;
+namespace CoreBundle\Tools;
 use NumberFormatter;
 use DateTimeZone;
 use DateTime;

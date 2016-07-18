@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Repository;
+namespace CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use DateTime;
@@ -27,7 +27,7 @@ class IpnRepository extends EntityRepository
 	}
 
 	public function getLast($limit,$dates){
-		$query = $this->getEntityManager()->createQuery("SELECT ipn.vadsTransUuid, ipn.vadsSiteId FROM AppBundle:Ipn ipn WHERE ipn.vadsCtxMode = 'PRODUCTION' AND ipn.vadsEffectiveCreationDate > ?1 AND ipn.vadsEffectiveCreationDate < ?2 AND ipn.vadsTransUuid NOT IN (SELECT payment.uuid FROM AppBundle:Payment payment) ORDER BY ipn.vadsEffectiveCreationDate DESC")->setMaxResults($limit)->setParameters(array(1=>$dates['dateBefore'],2=>$dates['dateAfter']));
+		$query = $this->getEntityManager()->createQuery("SELECT ipn.vadsTransUuid, ipn.vadsSiteId FROM CoreBundle:Ipn ipn WHERE ipn.vadsCtxMode = 'PRODUCTION' AND ipn.vadsEffectiveCreationDate > ?1 AND ipn.vadsEffectiveCreationDate < ?2 AND ipn.vadsTransUuid NOT IN (SELECT payment.uuid FROM CoreBundle:Payment payment) ORDER BY ipn.vadsEffectiveCreationDate DESC")->setMaxResults($limit)->setParameters(array(1=>$dates['dateBefore'],2=>$dates['dateAfter']));
 		return $query->getResult();
 	}
 
@@ -37,7 +37,7 @@ class IpnRepository extends EntityRepository
 	}
 
 	public function countDayIpn($dates){
-		$query = $this->getEntityManager()->createQuery("SELECT COUNT(DISTINCT ipn.vadsTransUuid) FROM AppBundle:Ipn ipn WHERE ipn.vadsEffectiveCreationDate > ?1 AND ipn.vadsEffectiveCreationDate < ?2 AND ipn.vadsCtxMode = 'PRODUCTION' AND ipn.vadsTransUuid NOT IN (SELECT payment.uuid FROM AppBundle:Payment payment) ORDER BY ipn.vadsEffectiveCreationDate DESC")->setParameters(array(1=>$dates['dateBefore'],2=>$dates['dateAfter']));
+		$query = $this->getEntityManager()->createQuery("SELECT COUNT(DISTINCT ipn.vadsTransUuid) FROM CoreBundle:Ipn ipn WHERE ipn.vadsEffectiveCreationDate > ?1 AND ipn.vadsEffectiveCreationDate < ?2 AND ipn.vadsCtxMode = 'PRODUCTION' AND ipn.vadsTransUuid NOT IN (SELECT payment.uuid FROM CoreBundle:Payment payment) ORDER BY ipn.vadsEffectiveCreationDate DESC")->setParameters(array(1=>$dates['dateBefore'],2=>$dates['dateAfter']));
 		return $query->getSingleScalarResult();
 	}
 }

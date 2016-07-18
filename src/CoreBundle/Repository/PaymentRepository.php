@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Repository;
+namespace CoreBundle\Repository;
 use DateInterval;
 use DateTime;
 /**

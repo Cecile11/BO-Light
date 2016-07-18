@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Ipn
  *
  * @ORM\Table(name="ipn")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\IpnRepository")
+ * @ORM\Entity(repositoryClass="CoreBundle\Repository\IpnRepository")
  */
 class Ipn
 {

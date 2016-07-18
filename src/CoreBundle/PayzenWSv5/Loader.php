@@ -1,6 +1,6 @@
 <?php
-namespace AppBundle\PayzenWSv5;
-use AppBundle\Entity\Payment;
+namespace CoreBundle\PayzenWSv5;
+use CoreBundle\Entity\Payment;
 use DateTime;
 use DateTimeZone;
 
@@ -9,7 +9,7 @@ class Loader{
 	private $payzenWS;
 	private $em;
 
-	public function __construct(\Doctrine\ORM\EntityManager $em,\AppBundle\PayzenWSv5\PayzenWSv5 $payzenWS){
+	public function __construct(\Doctrine\ORM\EntityManager $em,\CoreBundle\PayzenWSv5\PayzenWSv5 $payzenWS){
 
 		$this->em = $em;
 		$this->payzenWS = $payzenWS;

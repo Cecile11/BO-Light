@@ -5,18 +5,18 @@
 
 services:
     app.Tool:
-        class: AppBundle\Tools\Tool
+        class: CoreBundle\Tools\Tool
     app.Config:
-        class: AppBundle\PayzenWSv5\Config
+        class: CoreBundle\PayzenWSv5\Config
         arguments: [@Request_stack]
     app.PayzenWSv5:
-        class: AppBundle\PayzenWSv5\PayzenWSv5
+        class: CoreBundle\PayzenWSv5\PayzenWSv5
         arguments: [@app.Config]
     app.Loader:
-        class: AppBundle\PayzenWSv5\Loader
+        class: CoreBundle\PayzenWSv5\Loader
         arguments: [@doctrine.orm.entity_manager,@app.PayzenWSv5]
     app.twig.extension.TwigAddOn:
-        class: AppBundle\Tools\TwigAddOn
+        class: CoreBundle\Tools\TwigAddOn
         arguments: [@security.context]
         tags:
             - { name: twig.extension}

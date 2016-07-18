@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Command;
+namespace CoreBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
-use AppBundle\Entity\Ipn;
+use CoreBundle\Entity\Ipn;
 use SQLite3;
 use DateTime;
 use DateTimeZone;
@@ -31,7 +31,7 @@ class LoaddbCommand extends ContainerAwareCommand
         $utc = new DateTimeZone('UTC');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $db = $db = new SQLite3($input->getArgument('db'));
-        $lastDate = $em->getRepository('AppBundle:Ipn')->getLastDate();
+        $lastDate = $em->getRepository('CoreBundle:Ipn')->getLastDate();
         if ($lastDate){
             $stmt = $db->prepare('SELECT * FROM ipn WHERE ipn.ts > :lastdate');
             $stmt->bindValue('lastdate',$lastDate,SQLITE3_TEXT);

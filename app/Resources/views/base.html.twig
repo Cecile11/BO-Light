@@ -9,6 +9,9 @@
             body{
                 padding-top:55px;
             }
+            .login{
+                max-width:400px;
+            }
             </style>
         {% endblock %}
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,7 +19,7 @@
     </head>
 
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
+    <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
                 <span class="sr-only">Toggle navigation</span>
@@ -44,12 +47,13 @@
                     <span class="glyphicon glyphicon-log-out" title="Logout"></span>
                 </a></li>
                 {% else %}
-                <li><a href="{{ path('fos_user_security_login') }}">Login</a></li>
+                <li><a href="{{ path('login') }}">Login</a></li>
                 {% endif %}
             </ul>
         </div>
     </nav>
     <body>
+        <div class="container-fluid">
         {% block body %}
         {% if limit is defined and url is defined %}
         <a href="{{ path(url,{'limit':'today'})}}"><button class="btn-sm {{ (limit == "today") ? 'btn-success' : 'btn-primary'}} " >Today</button></a>
@@ -61,6 +65,7 @@
         <a href="{{ path(url,{'limit':'quarter'})}}"><button class="btn-sm {{ (limit == "quarter") ? 'btn-success' : 'btn-primary'}} " >Quarter</button></a>
         {% endif %}
         {% endblock %}
+        </div>
     </body>
     {% block javascripts %}
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

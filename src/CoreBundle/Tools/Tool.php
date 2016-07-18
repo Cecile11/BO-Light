@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Tools;
+namespace CoreBundle\Tools;
 use DateTime;
 use DateInterval;
 use DateTimeZone;

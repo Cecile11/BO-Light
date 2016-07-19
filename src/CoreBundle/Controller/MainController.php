@@ -29,7 +29,7 @@ class MainController extends Controller
         $request->attributes->set('site_id',$request->request->get('vads_site_id'));
         // a faire mode prod ( connecter avec l'user ? )
         
-        $key = $this->get('app.Config')->getKey();
+        $key = $this->get('core.Config')->getKey();
         $k = '';
         ksort($arg);
         foreach ($arg as $param => $val) {
@@ -109,8 +109,8 @@ class MainController extends Controller
      * @Security("has_role('ROLE_USER')")
      */
     public function listIpnAction(Request $request,$limit="today"){
-        $dates = $this->get('app.Tool')->getDates($limit);
-        $decalage = $this->get('app.Tool')->getDecalage('UTC','Europe/Paris');
+        $dates = $this->get('core.Tool')->getDates($limit);
+        $decalage = $this->get('core.Tool')->getDecalage('UTC','Europe/Paris');
         $pagination = $this->getDoctrine()->getRepository('CoreBundle:Ipn')->findAllIpn($dates);
 
         return $this->render('CoreBundle:Core:list.html.twig',array('pagination' => $pagination,'limit'=>$limit,'url'=>'list','decalage'=>$decalage));
@@ -121,9 +121,9 @@ class MainController extends Controller
      * @Security("has_role('ROLE_USER')")
      */
     public function listPaymentAction(Request $request,$client = null,$limit="today"){
-        $decalage = $this->get('app.Tool')->getDecalage('UTC','Europe/Paris');
+        $decalage = $this->get('core.Tool')->getDecalage('UTC','Europe/Paris');
         $em = $this->getDoctrine()->getManager();
-        $tool = $this->get('app.Tool');
+        $tool = $this->get('core.Tool');
         if ($client){
             $payment_list = $em->getRepository('CoreBundle:Payment')->findByVadsCustId($client);
         }else{
@@ -144,8 +144,8 @@ class MainController extends Controller
                             sleep(5);
                         }
                         $request->attributes->set('site_id',$ipn->getVadsSiteId());
-                        $vads = $this->get("app.PayzenWSv5");
-                        $mode = $this->get("app.Config")->getMode();
+                        $vads = $this->get("core.PayzenWSv5");
+                        $mode = $this->get("core.Config")->getMode();
                         sleep(2);
                         
                         try {
@@ -193,7 +193,7 @@ class MainController extends Controller
      */
     public function listClientAction($limit="today"){
         $client_list = array();
-        $dates = $this->get('app.Tool')->getDates($limit);
+        $dates = $this->get('core.Tool')->getDates($limit);
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('CoreBundle:Payment');
         $clients = $repo->findAllClientByDate($dates);
@@ -220,7 +220,7 @@ class MainController extends Controller
     public function performanceAction($limit="today",$offset=0){
         $rp = $this->getDoctrine()->getManager()->getRepository('CoreBundle:Payment');
         $perform_list = array();
-        $dates = $this->get('app.Tool')->getDates($limit);
+        $dates = $this->get('core.Tool')->getDates($limit);
         $dateBefore = $dates['dateBefore'];
         $dateAfter = $dates['dateAfter'];
         $oneInterval = $dates['oneInterval'];

@@ -23,7 +23,7 @@ class SuperController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $siteIdList = $this->get('app.Config')->getSiteIdList();
+        $siteIdList = $this->get('core.Config')->getSiteIdList();
         return $this->render('CoreBundle:Core:super_option.html.twig',array('site_id_list'=>$siteIdList));
     }
 
@@ -56,7 +56,7 @@ class SuperController extends Controller
     public function getPaymentAction(Request $request){
         $em = $this->getDoctrine()->getManager();
         $limit = strtolower($request->request->get('limit'));
-        $ipn_list = $em->getRepository('CoreBundle:Ipn')->getLast($request->request->get('number'),$this->get('app.Tool')->getDates($limit));
+        $ipn_list = $em->getRepository('CoreBundle:Ipn')->getLast($request->request->get('number'),$this->get('core.Tool')->getDates($limit));
         $i = 1;
         ob_start();
         foreach ($ipn_list as $ipn) {
@@ -67,7 +67,7 @@ class SuperController extends Controller
                     sleep(5);
                 }
                 $request->attributes->set('site_id',$ipn['vadsSiteId']);
-                $test = $this->get('app.Loader')->loadPayment($uuid);
+                $test = $this->get('core.Loader')->loadPayment($uuid);
                 if (!$test){
                     throw new Exception("Can't load payment");
                 }
@@ -84,7 +84,7 @@ class SuperController extends Controller
      */
     public function getPaymentFromAction(Request $request){
         $limit = strtolower($request->request->get('time'));
-        $dates = $this->get('app.Tool')->getDates($limit);
+        $dates = $this->get('core.Tool')->getDates($limit);
         return new Response($this->getDoctrine()->getManager()->getRepository('CoreBundle:Ipn')->countDayIpn($dates));
     }
 
@@ -99,7 +99,7 @@ class SuperController extends Controller
 
         $input = new ArrayInput(array(
            'command' => 'loaddb',
-           'db' => $this->getParameter('app.path_old_database'),
+           'db' => $this->getParameter('core.path_old_database'),
         ));
 
         $output = new BufferedOutput();
@@ -112,7 +112,7 @@ class SuperController extends Controller
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      */
     public function listPaymentAction(Request $request,$limit = "today"){
-        $dates = $this->get('app.Tool')->getDates($limit);
+        $dates = $this->get('core.Tool')->getDates($limit);
         $payment_list = $this->getDoctrine()->getManager()->getRepository('CoreBundle:Payment')->findAllByDate($dates['dateBefore'],$dates['dateAfter']);
         return $this->render('CoreBundle:Core:payment_table.html.twig',array('payment_list'=>$payment_list,'limit'=>$limit,'url'=>'payment_table'));
     }
@@ -128,7 +128,7 @@ class SuperController extends Controller
         $request->attributes->set('site_id',$siteId);
         $payment = $this->getDoctrine()->getManager()->getRepository('CoreBundle:Payment')->findOneByUuid($uuid);
         if(!$payment){
-            if($this->get('app.Loader')->loadPayment($uuid)){
+            if($this->get('core.Loader')->loadPayment($uuid)){
                 $message = "Payment loaded";
             } else {
                 $message = "Can't load payment";
@@ -137,7 +137,7 @@ class SuperController extends Controller
             $message = "Payment already loaded";
         }
         ob_clean();
-        $siteIdList = $this->get('app.Config')->getSiteIdList();
+        $siteIdList = $this->get('core.Config')->getSiteIdList();
         return $this->render('CoreBundle:Core:super_option.html.twig',array('site_id_list'=>$siteIdList,'message'=>$message));
     }
 }

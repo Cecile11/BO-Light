@@ -1,0 +1,18 @@
+
+services:
+    core.Tool:
+        class: CoreBundle\Tools\Tool
+    core.Config:
+        class: CoreBundle\PayzenWSv5\Config
+        arguments: [@Request_stack]
+    core.PayzenWSv5:
+        class: CoreBundle\PayzenWSv5\PayzenWSv5
+        arguments: [@core.Config]
+    core.Loader:
+        class: CoreBundle\PayzenWSv5\Loader
+        arguments: [@doctrine.orm.entity_manager,@core.PayzenWSv5]
+    core.twig.extension.TwigAddOn:
+        class: CoreBundle\Tools\TwigAddOn
+        arguments: [@security.context]
+        tags:
+            - { name: twig.extension}

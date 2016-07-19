@@ -46,7 +46,7 @@ class PaymentRepository extends \Doctrine\ORM\EntityRepository
 
 	public function findNbClient(DateTime $dateBefore, DateTime $dateAfter){
 		$qb = $this->createQueryBuilder('payment');
-		return $qb->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->andWhere("payment.vadsOperationType = '0'")->setParameter(2,$dateAfter)->select('COUNT(DISTINCT payment.vadsCustId)')->getQuery()->getSingleScalarResult();
+		return $qb->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->setParameter(2,$dateAfter)->select('COUNT(DISTINCT payment.vadsCustId)')->getQuery()->getSingleScalarResult();
 	}
 
 	public function findNbAccepted(DateTime $dateBefore, DateTime $dateAfter){
@@ -75,9 +75,39 @@ class PaymentRepository extends \Doctrine\ORM\EntityRepository
 		return $qb->select('SUM(payment.vadsEffectiveAmount)')->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->setParameter(2,$dateAfter)->andWhere("payment.vadsTransStatus != 'REFUSED'")->andWhere("payment.vadsOperationType = '0'")->getQuery()->getSingleScalarResult() + 0;
 	}
 
-	public function findTtCredit(DateTime $dateBefore,DateTime $dateAfter){
+	public function findTtAmountCredit(DateTime $dateBefore,DateTime $dateAfter){
 		$qb = $this->createQueryBuilder('payment');
-		return $qb->select('SUM(payment.vadsRefundAmount)')->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->setParameter(2,$dateAfter)->andWhere("payment.vadsTransStatus != 'REFUSED'")->andWhere("payment.vadsOperationType = '1'")->getQuery()->getSingleScalarResult() + 0;
+		return -1*$qb->select('SUM(payment.vadsEffectiveAmount)')->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->setParameter(2,$dateAfter)->andWhere("payment.vadsTransStatus != 'REFUSED'")->andWhere("payment.vadsOperationType = '1'")->getQuery()->getSingleScalarResult() + 0;
+	}
+
+	public function findNbCommandCredit(DateTime $dateBefore,DateTime $dateAfter){
+		return $this->findNbAcceptedCredit($dateBefore,$dateAfter) + $this->findNbRefusedCredit($dateBefore,$dateAfter);
+	}
+
+	public function findNbClientCredit(DateTime $dateBefore, DateTime $dateAfter){
+		$qb = $this->createQueryBuilder('payment');
+		return $qb->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->andWhere("payment.vadsOperationType = '1'")->setParameter(2,$dateAfter)->select('COUNT(DISTINCT payment.vadsCustId)')->getQuery()->getSingleScalarResult();
+	}
+
+	public function findNbAcceptedCredit(DateTime $dateBefore, DateTime $dateAfter){
+		$qb = $this->createQueryBuilder('payment');
+		$qb->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->andWhere("payment.vadsOperationType = '1'")->setParameter(2,$dateAfter);
+		return $qb->select('COUNT(payment.uuid)')->andWhere("payment.vadsTransStatus != 'REFUSED'")->getQuery()->getSingleScalarResult() + 0;
+	}
+
+	public function findNbRefusedCredit(DateTime $dateBefore, DateTime $dateAfter){
+		$qb = $this->createQueryBuilder('payment');
+		$qb->select('DISTINCT payment.vadsCustId')->where('payment.vadsEffectiveCreationDate > ?1 ')->setParameter(1,$dateBefore)->andWhere('payment.vadsEffectiveCreationDate <= ?2 ')->setParameter(2,$dateAfter)->andWhere("payment.vadsOperationType = '1'")->andWhere("payment.vadsTransStatus = 'REFUSED'");
+		$client_list = $qb->getQuery()->getResult();
+		$total = 0;
+		foreach ($client_list as $row) {
+			$qb = $this->createQueryBuilder('payment');
+			$qb->select('COUNT(payment.uuid)')->where('payment.vadsEffectiveCreationDate >= ?1 ')->setParameter(1,$dateBefore->format("Y-m-d"))->andWhere('payment.vadsEffectiveCreationDate < ?2 ')->setParameter(2,$dateBefore)->andWhere("payment.vadsTransStatus = 'REFUSED'")->andWhere('payment.vadsCustId = ?3')->setParameter(3,$row['vadsCustId']);
+			if ($qb->getQuery()->getSingleScalarResult() == 0){
+				$total++;
+			}
+		}
+		return $total;
 	}
 
 }

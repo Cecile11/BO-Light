@@ -236,6 +236,14 @@ class MainController extends Controller
                 'nbAccepted' => $rp->findNbAccepted($dateBefore,$dateAfter),
                 'nbRefused' => $rp->findNbRefused($dateBefore,$dateAfter)
                 );
+            $perform_list[] = array(
+                'time' => 'Credit',
+                'ttAmount'=>number_format($rp->findTtAmountCredit($dateBefore,$dateAfter)/100,2,'.',' '),
+                'nbCommands' => $rp->findNbCommandCredit($dateBefore,$dateAfter),
+                'nbClients' => $rp->findNbClientCredit($dateBefore,$dateAfter),
+                'nbAccepted' => $rp->findNbAcceptedCredit($dateBefore,$dateAfter),
+                'nbRefused' => $rp->findNbRefusedCredit($dateBefore,$dateAfter)
+                );
             $dateFin = clone $dateBefore;
             $dateBefore->add($allInterval);
             $dateBefore->sub($oneInterval);

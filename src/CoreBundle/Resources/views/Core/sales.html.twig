@@ -20,6 +20,10 @@
 		table-layout: fixed;
 		word-wrap:break-word;
 	}
+	.small{
+		height:50%;
+		color:blue;
+	}
 	</style>
 {% endblock %}
 {% block body %}
@@ -47,6 +51,16 @@
 			<td><b>{{perform.nbClients|filtreZero}}</b></td>
 			<td><b>{{perform.nbAccepted|filtreZero}}</b></td>
 			<td><b>{{perform.nbRefused|filtreZero}}</b></td>
+			<td></td>
+		</tr>
+		{% elseif loop.index == 2 %}
+		<tr class="small bg-info">
+			<td class="timeCol">{{perform.time}}</td>
+			<td class="numericCol">{% if perform.ttAmount|filtreZero %}€{% endif %}&nbsp;{{perform.ttAmount|filtreZero}}</td>
+			<td>{{perform.nbCommands|filtreZero}}</td>
+			<td>{{perform.nbClients|filtreZero}}</td>
+			<td>{{perform.nbAccepted|filtreZero}}</td>
+			<td>{{perform.nbRefused|filtreZero}}</td>
 			<td></td>
 		</tr>
 		{% else %}

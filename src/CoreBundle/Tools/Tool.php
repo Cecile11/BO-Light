@@ -42,24 +42,6 @@ class Tool{
         $dateAfter->setTimezone($utc);
         $dateBefore->setTimezone($utc);
         switch ($limit) {
-            case 'day-2':
-                $oneInterval = new DateInterval('PT1H');
-                $allInterval = new DateInterval('P1D');
-                $dateAfter->sub(new DateInterval('P2D'));
-                $dateBefore->sub(new DateInterval('P3D'));
-                break;
-            case 'day-3':
-                $oneInterval = new DateInterval('PT1H');
-                $allInterval = new DateInterval('P1D');
-                $dateAfter->sub(new DateInterval('P3D'));
-                $dateBefore->sub(new DateInterval('P4D'));
-                break;
-            case 'yesterday':
-            	$oneInterval = new DateInterval('PT1H');
-            	$allInterval = new DateInterval('P1D');
-                $dateAfter->sub($allInterval);
-                $dateBefore->sub(new DateInterval('P2D'));
-                break;
             case 'today':
             	$oneInterval = new DateInterval('PT1H');
             	$allInterval = new DateInterval('P1D');
@@ -82,15 +64,28 @@ class Tool{
         }
         if ($offset < 0){
             for ($i=0; $i > $offset; $i--) { 
-                $dateBefore->add($allInterval);
-                $dateAfter->add($allInterval);
-            }
-        }else{
-            for ($i=0; $i < $offset; $i++) { 
                 $dateBefore->sub($allInterval);
                 $dateAfter->sub($allInterval);
             }
+        }else{
+            for ($i=0; $i < $offset; $i++) { 
+                $dateBefore->add($allInterval);
+                $dateAfter->add($allInterval);
+            }
         }
-        return array('dateAfter'=>$dateAfter,'dateBefore'=>$dateBefore,'oneInterval'=>$oneInterval,'allInterval'=>$allInterval);
+        switch ($limit) {
+            case 'today':
+                $date = $dateAfter->format('d/m');
+                break;
+            case 'week':
+                $date = $dateAfter->format('d/m');
+                break;
+            case 'month':
+                $date = $dateAfter->format('F Y');
+                break;
+            case 'quarter':
+                $date="";
+        }
+        return array('dateAfter'=>$dateAfter,'dateBefore'=>$dateBefore,'oneInterval'=>$oneInterval,'allInterval'=>$allInterval,'date'=>$date);
 	}
 }

@@ -33,11 +33,11 @@
             <ul class="nav navbar-nav">
                 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                 {% if not is_granted('ROLE_GUEST') %}
-                <li class="active"><a href="{{ path('payment') }}{% if limit is defined %}/{{limit}}{% endif %}">Payments</a></li>
-                <li class="active"><a href="{{ path('list') }}{% if limit is defined %}/{{limit}}{% endif %}">IPN</a></li>
+                <li class="active"><a href="{{ path('payment') }}{% if limit is defined %}/{{limit}}{% endif %}{% if offset is defined %}/{{offset}}{% endif %}">Payments</a></li>
+                <li class="active"><a href="{{ path('list') }}{% if limit is defined %}/{{limit}}{% endif %}{% if offset is defined %}/{{offset}}{% endif %}">IPN</a></li>
                 {% endif %}
-                <li class="active"><a href="{{ path('clients') }}{% if limit is defined %}/{{limit}}{% endif %}"> Clients </a></li>
-                <li class="active"><a href="{{ path('sales') }}{% if limit is defined %}/{{limit}}{% endif %}"> Sales </a></li>
+                <li class="active"><a href="{{ path('clients') }}{% if limit is defined %}/{{limit}}{% endif %}{% if offset is defined %}/{{offset}}{% endif %}"> Clients </a></li>
+                <li class="active"><a href="{{ path('sales') }}{% if limit is defined %}/{{limit}}{% endif %}{% if offset is defined %}/{{offset}}{% endif %}"> Sales </a></li>
                 {% block navbar %}{% endblock %}
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <li class="active"><a href="{{ path('super_option')}}"> Super Option </a></li>
@@ -56,20 +56,26 @@
         <div class="container-fluid">
         {% block body %}
         {% if limit is defined and url is defined %}
-        <div class='col-sm-6'>
-            <a href="{{ path(url,{'limit':'today'})}}"><button class="btn-sm {{ (limit == "today") ? 'btn-success' : 'btn-primary'}} " >Today</button></a>
-            <a href="{{ path(url,{'limit':'yesterday'})}}"><button class="btn-sm {{ (limit == "yesterday") ? 'btn-success' : 'btn-primary'}} " >Yesterday</button></a>
-            <a href="{{ path(url,{'limit':'day-2'})}}"><button class="btn-sm {{ (limit == "day-2") ? 'btn-success' : 'btn-primary'}} " >D-2</button></a>
-            <a href="{{ path(url,{'limit':'day-3'})}}"><button class="btn-sm {{ (limit == "day-3") ? 'btn-success' : 'btn-primary'}} " >D-3</button></a>
+        <div class="row">
+        <div class="col-md-3 col-lg-3">
+            <a href="{{ path(url,{'limit':'today'})}}"><button class="btn-sm {{ (limit == "today") ? 'btn-success' : 'btn-primary'}} " >Day</button></a>
             <a href="{{ path(url,{'limit':'week'}) }}"><button class="btn-sm {{ (limit == "week") ? 'btn-success' : 'btn-primary'}} " >Week</button></a>
             <a href="{{ path(url,{'limit':'month'})}}"><button class="btn-sm {{ (limit == "month") ? 'btn-success' : 'btn-primary'}} " >Month</button></a>
             <a href="{{ path(url,{'limit':'quarter'})}}"><button class="btn-sm {{ (limit == "quarter") ? 'btn-success' : 'btn-primary'}} " >Quarter</button></a>
         </div>
-        <div class="col-sm-6">
+        {% if limit != "quarter" %}
+        <div class="col-md-4">
+            {% if limit != "month" %}
             <a href="{{ path(url,{'limit':limit,'offset':offset - 7})}}"><button class="btn-sm btn-primary" >      &lt;&lt;</button></a>
+            {% endif %}
             <a href="{{ path(url,{'limit':limit,'offset':offset - 1})}}"><button class="btn-sm btn-primary" >      &lt;</button></a>
+            {{date}}
             <a href="{{ path(url,{'limit':limit,'offset':offset + 1})}}"><button class="btn-sm btn-primary" >      &gt;</button></a>
+            {% if limit != "month" %}
             <a href="{{ path(url,{'limit':limit,'offset':offset + 7})}}"><button class="btn-sm btn-primary" >      &gt;&gt;</button></a>
+            {% endif %}
+        </div>
+        {% endif %}
         </div>
         {% endif %}
         {% endblock %}

@@ -3,6 +3,8 @@ namespace CoreBundle\PayzenWSv5;
 use CoreBundle\Entity\Payment;
 use DateTime;
 use DateTimeZone;
+use SoapFault;
+use Exception;
 
 class Loader{
 
@@ -22,6 +24,8 @@ class Loader{
         }
         catch (Exception $e) {
             spip_log("getPaymentDetailsResult : erreur ".$e->getMessage(),$mode."_LOG");
+            return false;
+        }catch(SoapFault $ex){
             return false;
         }
         if ($e = $response->getPaymentDetailsResult->commonResponse->responseCode){

@@ -11,6 +11,7 @@ use CoreBundle\Entity\Payment;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Serializer\Exception\Exception;
 use DateTime;
 use DateInterval;
 use DateTimeZone;

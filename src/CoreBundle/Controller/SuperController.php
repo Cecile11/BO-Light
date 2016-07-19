@@ -11,7 +11,7 @@ use CoreBundle\Entity\Payment;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Serializer\Exception\Exception;
+use Exception;
 use DateTime;
 use DateInterval;
 use DateTimeZone;
@@ -57,7 +57,24 @@ class SuperController extends Controller
     public function getPaymentAction(Request $request){
         $em = $this->getDoctrine()->getManager();
         $limit = strtolower($request->request->get('limit'));
-        $ipn_list = $em->getRepository('CoreBundle:Ipn')->getLast($request->request->get('number'),$this->get('core.Tool')->getDates($limit));
+        switch ($limit) {
+            case 'yesterday':
+                $offset = 1;
+                $limit = "today";
+                break;
+            case 'day-2':
+                $offset = 2;
+                $limit = "today";
+                break;
+            case 'day-3':
+                $offset = 3;
+                $limit = "today";
+                break;
+            default:
+                $offset = 0;
+                break;
+        }
+        $ipn_list = $em->getRepository('CoreBundle:Ipn')->getLast($request->request->get('number'),$this->get('core.Tool')->getDates($limit,$offset));
         $i = 1;
         ob_start();
         foreach ($ipn_list as $ipn) {
@@ -88,12 +105,15 @@ class SuperController extends Controller
         switch ($limit) {
             case 'yesterday':
                 $offset = 1;
+                $limit = "today";
                 break;
             case 'day-2':
                 $offset = 2;
+                $limit = "today";
                 break;
             case 'day-3':
                 $offset = 3;
+                $limit = "today";
                 break;
             default:
                 $offset = 0;

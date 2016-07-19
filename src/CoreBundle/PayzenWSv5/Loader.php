@@ -37,8 +37,8 @@ class Loader{
             $payment->setUuid($uuid);
             $payment->setData($data);
             $payment->setVadsCustId($data->customerResponse->billingDetails->reference);
-            $payment->setVadsCustFirstName($data->customerResponse->billingDetails->firstName);
-            $payment->setVadsCustLastName($data->customerResponse->billingDetails->lastName);
+            $payment->setVadsCustFirstName(isset($data->customerResponse->billingDetails->firstName) ? $data->customerResponse->billingDetails->firstName : "");
+            $payment->setVadsCustLastName(isset($data->customerResponse->billingDetails->lastName) ? $data->customerResponse->billingDetails->lastName : "");
             $payment->setVadsTransStatus($data->commonResponse->transactionStatusLabel);
             $date = DateTime::createFromFormat(DateTime::W3C,$data->paymentResponse->creationDate,new DateTimeZone('Europe/Paris'));
             $date->setTimezone(new DateTimeZone('UTC'));

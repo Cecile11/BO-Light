@@ -100,7 +100,7 @@ class SuperController extends Controller
 
         $input = new ArrayInput(array(
            'command' => 'loaddb',
-           'db' => $this->getParameter('core.path_old_database'),
+           'db' => $this->getParameter('app.path_old_database'),
         ));
 
         $output = new BufferedOutput();

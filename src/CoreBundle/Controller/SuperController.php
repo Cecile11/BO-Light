@@ -85,9 +85,10 @@ class SuperController extends Controller
                     sleep(5);
                 }
                 $request->attributes->set('site_id',$ipn['vadsSiteId']);
-                $test = $this->get('core.Loader')->loadPayment($uuid);
-                if (!$test){
-                    throw new Exception("Can't load payment");
+                $test = false;
+                $j = 0;
+                while (!$test and $j < 5 ){
+                    $test = $this->get('core.Loader')->loadPayment($uuid);
                 }
                 $i++;
             }

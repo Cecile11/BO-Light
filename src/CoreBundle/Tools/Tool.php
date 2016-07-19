@@ -35,9 +35,9 @@ class Tool{
 
 	public function getDates($limit,$offset){
         $utc = new DateTimeZone('UTC');
-		$dateAfter = new DateTime(null, new DateTimeZone('Europe/Paris'));
+		$dateAfter = new DateTime("now", new DateTimeZone('Europe/Paris'));
         $this->roundDateDayUp($dateAfter);
-        $dateBefore = new DateTime(null, new DateTimeZone('Europe/Paris'));
+        $dateBefore = new DateTime("now", new DateTimeZone('Europe/Paris'));
         $this->roundDateDayUp($dateBefore);
         $dateAfter->setTimezone($utc);
         $dateBefore->setTimezone($utc);

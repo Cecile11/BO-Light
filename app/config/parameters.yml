@@ -1,0 +1,14 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: symfony
+    database_user: root
+    database_password: root
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    secret: 03da03b9c5a83a8021994c03a1c1aa202ff934e6
+    database_path: '%kernel.root_dir%/data/data.db3'
+    core.path_old_database: '%kernel.root_dir%/data/ipn_ln.db'

@@ -56,13 +56,21 @@
         <div class="container-fluid">
         {% block body %}
         {% if limit is defined and url is defined %}
-        <a href="{{ path(url,{'limit':'today'})}}"><button class="btn-sm {{ (limit == "today") ? 'btn-success' : 'btn-primary'}} " >Today</button></a>
-        <a href="{{ path(url,{'limit':'yesterday'})}}"><button class="btn-sm {{ (limit == "yesterday") ? 'btn-success' : 'btn-primary'}} " >Yesterday</button></a>
-        <a href="{{ path(url,{'limit':'day-2'})}}"><button class="btn-sm {{ (limit == "day-2") ? 'btn-success' : 'btn-primary'}} " >D-2</button></a>
-        <a href="{{ path(url,{'limit':'day-3'})}}"><button class="btn-sm {{ (limit == "day-3") ? 'btn-success' : 'btn-primary'}} " >D-3</button></a>
-        <a href="{{ path(url,{'limit':'week'}) }}"><button class="btn-sm {{ (limit == "week") ? 'btn-success' : 'btn-primary'}} " >Week</button></a>
-        <a href="{{ path(url,{'limit':'month'})}}"><button class="btn-sm {{ (limit == "month") ? 'btn-success' : 'btn-primary'}} " >Month</button></a>
-        <a href="{{ path(url,{'limit':'quarter'})}}"><button class="btn-sm {{ (limit == "quarter") ? 'btn-success' : 'btn-primary'}} " >Quarter</button></a>
+        <div class='col-sm-6'>
+            <a href="{{ path(url,{'limit':'today'})}}"><button class="btn-sm {{ (limit == "today") ? 'btn-success' : 'btn-primary'}} " >Today</button></a>
+            <a href="{{ path(url,{'limit':'yesterday'})}}"><button class="btn-sm {{ (limit == "yesterday") ? 'btn-success' : 'btn-primary'}} " >Yesterday</button></a>
+            <a href="{{ path(url,{'limit':'day-2'})}}"><button class="btn-sm {{ (limit == "day-2") ? 'btn-success' : 'btn-primary'}} " >D-2</button></a>
+            <a href="{{ path(url,{'limit':'day-3'})}}"><button class="btn-sm {{ (limit == "day-3") ? 'btn-success' : 'btn-primary'}} " >D-3</button></a>
+            <a href="{{ path(url,{'limit':'week'}) }}"><button class="btn-sm {{ (limit == "week") ? 'btn-success' : 'btn-primary'}} " >Week</button></a>
+            <a href="{{ path(url,{'limit':'month'})}}"><button class="btn-sm {{ (limit == "month") ? 'btn-success' : 'btn-primary'}} " >Month</button></a>
+            <a href="{{ path(url,{'limit':'quarter'})}}"><button class="btn-sm {{ (limit == "quarter") ? 'btn-success' : 'btn-primary'}} " >Quarter</button></a>
+        </div>
+        <div class="col-sm-6">
+            <a href="{{ path(url,{'limit':limit,'offset':offset - 7})}}"><button class="btn-sm btn-primary" >      &lt;&lt;</button></a>
+            <a href="{{ path(url,{'limit':limit,'offset':offset - 1})}}"><button class="btn-sm btn-primary" >      &lt;</button></a>
+            <a href="{{ path(url,{'limit':limit,'offset':offset + 1})}}"><button class="btn-sm btn-primary" >      &gt;</button></a>
+            <a href="{{ path(url,{'limit':limit,'offset':offset + 7})}}"><button class="btn-sm btn-primary" >      &gt;&gt;</button></a>
+        </div>
         {% endif %}
         {% endblock %}
         </div>

@@ -17,6 +17,7 @@
 
 # Parameters
 /app/config/parameters.ini
+/app/config/parameters.yml
 
 # Managed by Composer
 /app/bootstrap.php.cache
@@ -58,5 +59,6 @@ payzen.sqlite
 app/Resources/key.ini
 .phpintel/
 web/*
+app/data/ipn_ln.db
 
 

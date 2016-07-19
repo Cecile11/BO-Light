@@ -33,7 +33,7 @@ class Tool{
     return $offset/3600;
     }
 
-	public function getDates($limit){
+	public function getDates($limit,$offset){
         $utc = new DateTimeZone('UTC');
 		$dateAfter = new DateTime(null, new DateTimeZone('Europe/Paris'));
         $this->roundDateDayUp($dateAfter);
@@ -77,8 +77,19 @@ class Tool{
                 break;
             case 'quarter':
             	$oneInterval = new DateInterval('P1D');
-            	$allInterval = new DateInterval('P4M');
+            	$allInterval = new DateInterval('P1M');
                 $dateBefore->sub($allInterval);
+        }
+        if ($offset < 0){
+            for ($i=0; $i > $offset; $i--) { 
+                $dateBefore->add($allInterval);
+                $dateAfter->add($allInterval);
+            }
+        }else{
+            for ($i=0; $i < $offset; $i++) { 
+                $dateBefore->sub($allInterval);
+                $dateAfter->sub($allInterval);
+            }
         }
         return array('dateAfter'=>$dateAfter,'dateBefore'=>$dateBefore,'oneInterval'=>$oneInterval,'allInterval'=>$allInterval);
 	}

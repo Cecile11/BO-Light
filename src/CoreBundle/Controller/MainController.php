@@ -106,29 +106,29 @@ class MainController extends Controller
     }
 
     /**
-     * @Route("/list/{limit}", name="list")
+     * @Route("/list/{limit}/{offset}", name="list")
      * @Security("has_role('ROLE_USER')")
      */
-    public function listIpnAction(Request $request,$limit="today"){
-        $dates = $this->get('core.Tool')->getDates($limit);
+    public function listIpnAction(Request $request,$limit="today",$offset=0){
+        $dates = $this->get('core.Tool')->getDates($limit,$offset);
         $decalage = $this->get('core.Tool')->getDecalage('UTC','Europe/Paris');
         $pagination = $this->getDoctrine()->getRepository('CoreBundle:Ipn')->findAllIpn($dates);
 
-        return $this->render('CoreBundle:Core:list.html.twig',array('pagination' => $pagination,'limit'=>$limit,'url'=>'list','decalage'=>$decalage));
+        return $this->render('CoreBundle:Core:list.html.twig',array('pagination' => $pagination,'limit'=>$limit,'url'=>'list','decalage'=>$decalage,'offset'=>$offset));
     }
 
     /**
-     * @route("/payment/{limit}/{client}", name="payment")
+     * @route("/payment/{limit}/{offset}/{client}", name="payment")
      * @Security("has_role('ROLE_USER')")
      */
-    public function listPaymentAction(Request $request,$client = null,$limit="today"){
+    public function listPaymentAction(Request $request,$client = null,$limit="today",$offset=0){
         $decalage = $this->get('core.Tool')->getDecalage('UTC','Europe/Paris');
         $em = $this->getDoctrine()->getManager();
         $tool = $this->get('core.Tool');
         if ($client){
             $payment_list = $em->getRepository('CoreBundle:Payment')->findByVadsCustId($client);
         }else{
-            $dates = $tool->getDates($limit);
+            $dates = $tool->getDates($limit,$offset);
             $dateAfter = $dates['dateAfter'];
             $dateBefore = $dates['dateBefore'];
             $payment_list = $em->getRepository('CoreBundle:Payment')->findAllByDate($dateBefore,$dateAfter);
@@ -185,16 +185,16 @@ class MainController extends Controller
             }
         }
         
-        return $this->render('CoreBundle:Core:payment_list.html.twig',array('payment_list'=>$payment_list,'limit'=>$limit,'url'=>'payment','decalage'=>$decalage));
+        return $this->render('CoreBundle:Core:payment_list.html.twig',array('payment_list'=>$payment_list,'limit'=>$limit,'url'=>'payment','decalage'=>$decalage,'offset'=>$offset));
     }
 
     /**
-     * @route("/clients/{limit}", name="clients")
+     * @route("/clients/{limit}/{offset}", name="clients")
      * @Security("has_role('ROLE_USER')")
      */
-    public function listClientAction($limit="today"){
+    public function listClientAction($limit="today",$offset=0){
         $client_list = array();
-        $dates = $this->get('core.Tool')->getDates($limit);
+        $dates = $this->get('core.Tool')->getDates($limit,$offset);
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('CoreBundle:Payment');
         $clients = $repo->findAllClientByDate($dates);
@@ -211,7 +211,7 @@ class MainController extends Controller
 
         
 
-        return $this->render('CoreBundle:Core:client_list.html.twig',array('limit'=>$limit,'client_list'=>$client_list,'url'=>'clients'));
+        return $this->render('CoreBundle:Core:client_list.html.twig',array('limit'=>$limit,'client_list'=>$client_list,'url'=>'clients','offset'=>$offset));
     }
 
     /**
@@ -221,7 +221,7 @@ class MainController extends Controller
     public function performanceAction($limit="today",$offset=0){
         $rp = $this->getDoctrine()->getManager()->getRepository('CoreBundle:Payment');
         $perform_list = array();
-        $dates = $this->get('core.Tool')->getDates($limit);
+        $dates = $this->get('core.Tool')->getDates($limit,$offset);
         $dateBefore = $dates['dateBefore'];
         $dateAfter = $dates['dateAfter'];
         $oneInterval = $dates['oneInterval'];
@@ -262,24 +262,13 @@ class MainController extends Controller
                 $dateAfter->sub($oneInterval);
                 $dateBefore->sub($oneInterval);
             }
-            return $this->render('CoreBundle:Core:sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales'));
+            return $this->render('CoreBundle:Core:sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','offset'=>$offset));
         }else{
             if ($limit == "week"){
                 //Total
                 $performDay = array('time'=>'Total');
                 $day_list = array();
                 $oneWeek = new DateInterval('P8D');
-                if ($offset < 0){
-                    for ($i=0; $i > $offset; $i--) { 
-                        $dateBefore->sub($allInterval);
-                        $dateAfter->sub($allInterval);
-                    }
-                }else{
-                    for ($i=0; $i < $offset; $i++) { 
-                        $dateBefore->add($allInterval);
-                        $dateAfter->add($allInterval);
-                    }
-                }
                 $dateBefore->add($oneWeek);
                 $dateBefore->sub($allInterval);
                 for ($i=1; $i < 9; $i++) {
@@ -318,7 +307,7 @@ class MainController extends Controller
                 }
             return $this->render('CoreBundle:Core:salesWeek.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','day_list'=>$day_list,'offset'=>$offset));
             }else{
-                return $this->render('CoreBundle:Core:sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales'));
+                return $this->render('CoreBundle:Core:sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','offset'=>$offset));
             }
         }
     }

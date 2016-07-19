@@ -27,11 +27,6 @@
 {% endblock %}
 {% block body %}
 {{parent()}}
-<br>
-<a href="{{ path(url,{'limit':'week','offset':offset - 7})}}"><button class="btn-sm btn-primary" >  	&lt;&lt;</button></a>
-<a href="{{ path(url,{'limit':'week','offset':offset - 1})}}"><button class="btn-sm btn-primary" >  	&lt;</button></a>
-<a href="{{ path(url,{'limit':'week','offset':offset + 1})}}"><button class="btn-sm btn-primary" >  	&gt;</button></a>
-<a href="{{ path(url,{'limit':'week','offset':offset + 7})}}"><button class="btn-sm btn-primary" >  	&gt;&gt;</button></a>
 	<table id="saleMonthTable" class="compact stripe">
 		<thead>
 			<tr>

@@ -11,4 +11,4 @@ parameters:
     mailer_password: null
     secret: 03da03b9c5a83a8021994c03a1c1aa202ff934e6
     database_path: '%kernel.root_dir%/data/data.db3'
-    core.path_old_database: '%kernel.root_dir%/data/ipn_ln.db'
+    app.path_old_database: '%kernel.root_dir%/data/ipn_ln.db'

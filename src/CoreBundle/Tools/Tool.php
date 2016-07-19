@@ -17,9 +17,9 @@ class Tool{
 
 	public function roundDateDayUp(DateTime $dateTime){
 		$dateTime = $this->roundDateTimeUp($dateTime);
-		$hour = (int) $dateTime->format('H');
+		$hour = ((int) $dateTime->format('H') + $this->getDecalage('UTC','Europe/Paris'))%24;
 		$ts = $dateTime->getTimestamp();
-		$ts = $ts + (24 - $hour - $this->getDecalage('UTC','Europe/Paris'))*3600;
+		$ts = $ts + (24 - $hour)*3600;
 		$dateTime->setTimestamp($ts);
 		return $dateTime;
 	}

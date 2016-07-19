@@ -226,7 +226,7 @@ class MainController extends Controller
         $rp = $this->getDoctrine()->getManager()->getRepository('CoreBundle:Payment');
         $perform_list = array();
         $dates = $this->get('core.Tool')->getDates($limit,$offset);
-        $date = $dates['date'];
+        $dateSelect = $dates['date'];
         $dateBefore = $dates['dateBefore'];
         $dateAfter = $dates['dateAfter'];
         $oneInterval = $dates['oneInterval'];
@@ -267,7 +267,7 @@ class MainController extends Controller
                 $dateAfter->sub($oneInterval);
                 $dateBefore->sub($oneInterval);
             }
-            return $this->render('CoreBundle:Core:sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','offset'=>$offset,'date'=>$date));
+            return $this->render('CoreBundle:Core:sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','offset'=>$offset,'date'=>$dateSelect));
         }else{
             if ($limit == "week"){
                 //Total
@@ -310,9 +310,9 @@ class MainController extends Controller
                     $dateBefore->sub($oneInterval);
                 $perform_list[] = $performDay;
                 }
-            return $this->render('CoreBundle:Core:salesWeek.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','day_list'=>$day_list,'offset'=>$offset,'date'=>$date));
+            return $this->render('CoreBundle:Core:salesWeek.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','day_list'=>$day_list,'offset'=>$offset,'date'=>$dateSelect));
             }else{
-                return $this->render('CoreBundle:Core:sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','offset'=>$offset,'date'=>$date));
+                return $this->render('CoreBundle:Core:sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','offset'=>$offset,'date'=>$dateSelect));
             }
         }
     }

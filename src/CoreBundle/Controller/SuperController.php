@@ -85,7 +85,21 @@ class SuperController extends Controller
      */
     public function getPaymentFromAction(Request $request){
         $limit = strtolower($request->request->get('time'));
-        $dates = $this->get('core.Tool')->getDates($limit);
+        switch ($limit) {
+            case 'yesterday':
+                $offset = 1;
+                break;
+            case 'day-2':
+                $offset = 2;
+                break;
+            case 'day-3':
+                $offset = 3;
+                break;
+            default:
+                $offset = 0;
+                break;
+        }
+        $dates = $this->get('core.Tool')->getDates($limit,$offset);
         return new Response($this->getDoctrine()->getManager()->getRepository('CoreBundle:Ipn')->countDayIpn($dates));
     }
 
@@ -109,13 +123,13 @@ class SuperController extends Controller
     }
 
     /**
-     * @Route("/super_option/payment_table/{limit}",name="payment_table")
+     * @Route("/super_option/payment_table/{limit}/{offset}",name="payment_table")
      * @Security("has_role('ROLE_SUPER_ADMIN')")
      */
-    public function listPaymentAction(Request $request,$limit = "today"){
-        $dates = $this->get('core.Tool')->getDates($limit);
+    public function listPaymentAction(Request $request,$limit = "today",$offset=0){
+        $dates = $this->get('core.Tool')->getDates($limit,$offset);
         $payment_list = $this->getDoctrine()->getManager()->getRepository('CoreBundle:Payment')->findAllByDate($dates['dateBefore'],$dates['dateAfter']);
-        return $this->render('CoreBundle:Core:payment_table.html.twig',array('payment_list'=>$payment_list,'limit'=>$limit,'url'=>'payment_table'));
+        return $this->render('CoreBundle:Core:payment_table.html.twig',array('payment_list'=>$payment_list,'limit'=>$limit,'url'=>'payment_table','offset'=>$offset,'date'=>$dates['date']));
     }
 
     /**

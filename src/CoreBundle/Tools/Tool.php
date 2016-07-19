@@ -64,13 +64,13 @@ class Tool{
         }
         if ($offset < 0){
             for ($i=0; $i > $offset; $i--) { 
-                $dateBefore->sub($allInterval);
-                $dateAfter->sub($allInterval);
+                $dateBefore->add($allInterval);
+                $dateAfter->add($allInterval);
             }
         }else{
             for ($i=0; $i < $offset; $i++) { 
-                $dateBefore->add($allInterval);
-                $dateAfter->add($allInterval);
+                $dateBefore->sub($allInterval);
+                $dateAfter->sub($allInterval);
             }
         }
         switch ($limit) {

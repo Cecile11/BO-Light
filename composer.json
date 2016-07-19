@@ -24,7 +24,8 @@
         "knplabs/knp-paginator-bundle": "^2.5",
         "friendsofsymfony/user-bundle": "dev-master",
         "sensiolabs/ansi-to-html": "^1.1",
-        "vich/uploader-bundle": "^1.1"
+        "vich/uploader-bundle": "^1.1",
+        "symfony/assetic-bundle": "^2.8"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",

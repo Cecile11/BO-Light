@@ -99,36 +99,10 @@
 	</table>
 {% endblock %}
 {% block javascripts %}
-{{ parent()}}
+	{{ parent()}}
 	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
 	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
-	<script>
-	$(document).ready(function(){
-    	$('#saleMonthTable').DataTable({
-    		searching: false,
-    		paging: false,
-    		ordering: false,
-    		"columns": [
-				{ "width": "20px" },
-				{ "width": "60px" },
-				{ "width": "40px" },
-				{ "width": "60px" },
-				{ "width": "40px" },
-				{ "width": "60px" },
-				{ "width": "40px" },
-				{ "width": "60px" },
-				{ "width": "40px" },
-				{ "width": "60px" },
-				{ "width": "40px" },
-				{ "width": "60px" },
-				{ "width": "40px" },
-				{ "width": "60px" },
-				{ "width": "40px" },
-				{ "width": "60px" },
-				{ "width": "40px" },
-			    null
-			  ]
-		});
-	});
-	</script>
+	{% javascripts '@CoreBundle/Resources/public/js/sales_week.js' %}
+		<script src="{{ asset_url }}"></script>
+	{% endjavascripts %}
 {% endblock %}

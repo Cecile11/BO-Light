@@ -19,7 +19,7 @@ class Tool{
 		$dateTime = $this->roundDateTimeUp($dateTime);
 		$hour = (int) $dateTime->format('H');
 		$ts = $dateTime->getTimestamp();
-		$ts = $ts + (24 - $hour)*3600;
+		$ts = $ts + (24 - $hour - $this->getDecalage('UTC','Europe/Paris'))*3600;
 		$dateTime->setTimestamp($ts);
 		return $dateTime;
 	}
@@ -35,9 +35,9 @@ class Tool{
 
 	public function getDates($limit,$offset){
         $utc = new DateTimeZone('UTC');
-		$dateAfter = new DateTime("now", new DateTimeZone('Europe/Paris'));
+		$dateAfter = new DateTime();
         $this->roundDateDayUp($dateAfter);
-        $dateBefore = new DateTime("now", new DateTimeZone('Europe/Paris'));
+        $dateBefore = new DateTime();
         $this->roundDateDayUp($dateBefore);
         $dateAfter->setTimezone($utc);
         $dateBefore->setTimezone($utc);

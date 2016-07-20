@@ -56,24 +56,26 @@
     <body>
         {% block body %}
         {% if limit is defined and url is defined %}
-            <a href="{{ path(url,{'limit':'today'})}}"><button class="btn-sm {{ (limit == "today") ? 'btn-success' : 'btn-primary'}} " >Day</button></a>
-            <a href="{{ path(url,{'limit':'week'}) }}"><button class="btn-sm {{ (limit == "week") ? 'btn-success' : 'btn-primary'}} " >Week</button></a>
+        <table><tr>
+            <td><a href="{{ path(url,{'limit':'today'})}}"><button class="btn-sm {{ (limit == "today") ? 'btn-success' : 'btn-primary'}} " >Day</button></a></td>
+            <td><a href="{{ path(url,{'limit':'week'}) }}"><button class="btn-sm {{ (limit == "week") ? 'btn-success' : 'btn-primary'}} " >Week</button></a></td>
             {% if url != "sales" %}
-            <a href="{{ path(url,{'limit':'month'})}}"><button class="btn-sm {{ (limit == "month") ? 'btn-success' : 'btn-primary'}} " >Month</button></a>
-            <a href="{{ path(url,{'limit':'quarter'})}}"><button class="btn-sm {{ (limit == "quarter") ? 'btn-success' : 'btn-primary'}} " >Quarter</button></a>
+            <td><a href="{{ path(url,{'limit':'month'})}}"><button class="btn-sm {{ (limit == "month") ? 'btn-success' : 'btn-primary'}} " >Month</button></a></td>
+            <td><a href="{{ path(url,{'limit':'quarter'})}}"><button class="btn-sm {{ (limit == "quarter") ? 'btn-success' : 'btn-primary'}} " >Quarter</button></a></td>
             {% endif %}
         {% if limit != "quarter" %}
-            &nbsp;&nbsp;
+            <td>&nbsp;&nbsp;</td>
             {% if limit != "month" %}
-            <a href="{{ path(url,{'limit':limit,'offset':offset - 7})}}" data-toggle="tooltip" title="+1 Week" data-placement="top"><button class="btn-sm btn-primary" > &lt;&lt; </button></a> 
+            <td><a href="{{ path(url,{'limit':limit,'offset':offset - 7})}}" data-toggle="tooltip" title="+1 Week" data-placement="top"><button class="btn-sm btn-primary" > &lt;&lt; </button></a></td>
             {% endif %}
-            <a href="{{ path(url,{'limit':limit,'offset':offset - 1})}}" data-toggle="tooltip" title="+1 Day" data-placement="top"><button class="btn-sm btn-primary" > &lt; </button></a>
-            {{date}}
-            <a href="{{ path(url,{'limit':limit,'offset':offset + 1})}}" data-toggle="tooltip" title="-1 Day" data-placement="top"><button class="btn-sm btn-primary" > &gt; </button></a>
+            <td><a href="{{ path(url,{'limit':limit,'offset':offset - 1})}}" data-toggle="tooltip" title="+1 Day" data-placement="top"><button class="btn-sm btn-primary" > &lt; </button></a></td>
+            <td>&nbsp;{{date}}&nbsp;</td>
+            <td><a href="{{ path(url,{'limit':limit,'offset':offset + 1})}}" data-toggle="tooltip" title="-1 Day" data-placement="top"><button class="btn-sm btn-primary" > &gt; </button></a></td>
             {% if limit != "month" %}
-            <a href="{{ path(url,{'limit':limit,'offset':offset + 7})}}"><button class="btn-sm btn-primary" data-toggle="tooltip" title="-1 Week" data-placement="top"> &gt;&gt; </button></a>
+            <td><a href="{{ path(url,{'limit':limit,'offset':offset + 7})}}"><button class="btn-sm btn-primary" data-toggle="tooltip" title="-1 Week" data-placement="top"> &gt;&gt; </button></a></td>
             {% endif %}
         {% endif %}
+        </tr></table>
         {% endif %}
         {% endblock %}
     </body>

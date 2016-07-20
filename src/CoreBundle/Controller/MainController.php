@@ -272,6 +272,7 @@ class MainController extends Controller
             if ($limit == "week"){
                 //Total
                 $performDay = array('time'=>'Total');
+                $performCredit = array('time'=>'Credit');
                 $day_list = array();
                 $oneWeek = new DateInterval('P8D');
                 $dateBefore->add($oneWeek);
@@ -284,10 +285,15 @@ class MainController extends Controller
                         'ttAmount'.$i=>number_format($rp->findTtAmount($dateBefore,$dateAfter)/100,2,'.',' '),
                         'nbCommands'.$i=>$rp->findNbAccepted($dateBefore,$dateAfter)
                         ));
+                    $performCredit = array_merge($performCredit,array(
+                        'ttAmount'.$i=>number_format($rp->findTtAmountCredit($dateBefore,$dateAfter)/100,2,'.',' '),
+                        'nbCommands'.$i=>$rp->findNbAcceptedCredit($dateBefore,$dateAfter)
+                        ));
                     $dateAfter->sub($allInterval);
                     $dateBefore->sub($allInterval);
                 }
                 $perform_list[] = $performDay;
+                $perform_list[] = $performCredit;
                 $dateAfter->add($oneWeek);
                 $dateBefore->add($oneWeek);
                 $dateBefore->add($allInterval);

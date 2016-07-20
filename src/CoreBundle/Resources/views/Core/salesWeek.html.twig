@@ -23,6 +23,10 @@
 		table-layout: fixed;
 		word-wrap:break-word;
 	}
+	.small{
+		height:50%;
+		color:blue;
+	}
 	</style>
 {% endblock %}
 {% block body %}
@@ -68,7 +72,7 @@
 			<td></td>
 		</tr>
 		{% else %}
-		<tr>
+		<tr {% if loop.index == 2 %}class="small bg-info"{% endif %}>
 			<td class="timeCol">{{perform.time}}</td>
 			<td class="numericCol">{% if perform.ttAmount1|filtreZero %}€{% endif %}&nbsp;{{perform.ttAmount1|filtreZero}}</td>
 			<td class="timeCol"><small>{{perform.nbCommands1|filtreZeroPlus}}</small></td>

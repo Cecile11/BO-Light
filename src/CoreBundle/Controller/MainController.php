@@ -318,7 +318,7 @@ class MainController extends Controller
                 }
             return $this->render('CoreBundle:Core:salesWeek.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','day_list'=>$day_list,'offset'=>$offset,'date'=>$dateSelect));
             }else{
-                return $this->render('CoreBundle:Core:sales.html.twig',array('limit'=>$limit,'perform_list'=>$perform_list,'url'=>'sales','offset'=>$offset,'date'=>$dateSelect));
+                return $this->redirectToRoute('sales');
             }
         }
     }

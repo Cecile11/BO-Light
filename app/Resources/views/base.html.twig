@@ -65,10 +65,12 @@
             {% endif %}
         {% if limit != "quarter" %}
             <td>&nbsp;&nbsp;</td>
+            {% if offset > 0 %}
             {% if limit != "month" %}
             <td><a href="{{ path(url,{'limit':limit,'offset':offset - 7})}}" data-toggle="tooltip" title="+1 Week" data-placement="top"><button class="btn-sm btn-primary" > &lt;&lt; </button></a></td>
             {% endif %}
             <td><a href="{{ path(url,{'limit':limit,'offset':offset - 1})}}" data-toggle="tooltip" title="+1 Day" data-placement="top"><button class="btn-sm btn-primary" > &lt; </button></a></td>
+            {% endif %}
             <td>&nbsp;{{date}}&nbsp;</td>
             <td><a href="{{ path(url,{'limit':limit,'offset':offset + 1})}}" data-toggle="tooltip" title="-1 Day" data-placement="top"><button class="btn-sm btn-primary" > &gt; </button></a></td>
             {% if limit != "month" %}

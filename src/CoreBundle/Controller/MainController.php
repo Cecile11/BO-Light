@@ -111,6 +111,9 @@ class MainController extends Controller
      */
     public function listIpnAction(Request $request,$limit="today",$offset=0){
         $dates = $this->get('core.Tool')->getDates($limit,$offset);
+        if ($offset < 0){
+            $offset = 0;
+        }
         $decalage = $this->get('core.Tool')->getDecalage('UTC','Europe/Paris');
         $date = $dates['date'];
         $pagination = $this->getDoctrine()->getRepository('CoreBundle:Ipn')->findAllIpn($dates);
@@ -126,6 +129,9 @@ class MainController extends Controller
         $decalage = $this->get('core.Tool')->getDecalage('UTC','Europe/Paris');
         $em = $this->getDoctrine()->getManager();
         $tool = $this->get('core.Tool');
+        if ($offset < 0){
+            $offset = 0;
+        }
         $date = "None";
         if ($client){
             $payment_list = $em->getRepository('CoreBundle:Payment')->findByVadsCustId($client);
@@ -197,6 +203,9 @@ class MainController extends Controller
      */
     public function listClientAction($limit="today",$offset=0){
         $client_list = array();
+        if ($offset < 0){
+            $offset = 0;
+        }
         $dates = $this->get('core.Tool')->getDates($limit,$offset);
         $date = $dates['date'];
         $em = $this->getDoctrine()->getManager();
@@ -225,6 +234,9 @@ class MainController extends Controller
     public function performanceAction($limit="today",$offset=0){
         $rp = $this->getDoctrine()->getManager()->getRepository('CoreBundle:Payment');
         $perform_list = array();
+        if ($offset < 0){
+            $offset = 0;
+        }
         $dates = $this->get('core.Tool')->getDates($limit,$offset);
         $dateSelect = $dates['date'];
         $dateBefore = $dates['dateBefore'];

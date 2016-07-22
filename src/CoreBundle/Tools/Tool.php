@@ -62,12 +62,7 @@ class Tool{
             	$allInterval = new DateInterval('P1M');
                 $dateBefore->sub($allInterval);
         }
-        if ($offset < 0){
-            for ($i=0; $i > $offset; $i--) { 
-                $dateBefore->add($allInterval);
-                $dateAfter->add($allInterval);
-            }
-        }else{
+        if ($offset > 0){
             for ($i=0; $i < $offset; $i++) { 
                 $dateBefore->sub($allInterval);
                 $dateAfter->sub($allInterval);

@@ -25,7 +25,7 @@ class PaymentRepository extends \Doctrine\ORM\EntityRepository
 		$qb = $this->createQueryBuilder('payment');
 		return $qb->select('COUNT(DISTINCT payment.uuid)')->where('payment.vadsEffectiveCreationDate > ?1 ')->andWhere("payment.vadsCustId = ?2")->setParameter(2,$client)->andWhere('payment.vadsEffectiveCreationDate < ?3 ')->setParameters(array(1=>$dates['dateBefore'],2=>$client,3=>$dates['dateAfter']))->andWhere("payment.vadsTransStatus != 'REFUSED'")->getQuery()->getSingleScalarResult();
 	}
-	
+
 	public function findNbCommandClient($client,$dates){
 		return $this->findNbAcceptedClient($client,$dates) + $this->findNbRefusedClient($client,$dates);
 	}
@@ -110,4 +110,9 @@ class PaymentRepository extends \Doctrine\ORM\EntityRepository
 		return $total;
 	}
 
+	public function findAllData(){
+		$qb = $this->createQueryBuilder('payment');
+		$qb->select('payment.data');
+		return $qb->getQuery()->getResult();
+	}
 }

@@ -6,6 +6,14 @@
 	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css">
 	<style>.popover{max-width:600px;}</style>
 {% endblock %}
+{% block javascripts %}
+{{ parent()}}
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+	{% javascripts '@CoreBundle/Resources/public/js/table_popover.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
 {% block body %}
 {% if is_granted('ROLE_GUEST') %}
 	<p>Nothing to display or insufficient rights</p>
@@ -64,12 +72,4 @@
 		</tbody>
 	</table>
 {% endif %}
-{% endblock %}
-{% block javascripts %}
-{{ parent()}}
-	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
-	{% javascripts '@CoreBundle/Resources/public/js/table_popover.js' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
 {% endblock %}

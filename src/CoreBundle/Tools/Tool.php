@@ -3,6 +3,7 @@ namespace CoreBundle\Tools;
 use DateTime;
 use DateInterval;
 use DateTimeZone;
+use stdClass;
 
 class Tool{
 
@@ -83,4 +84,25 @@ class Tool{
         }
         return array('dateAfter'=>$dateAfter,'dateBefore'=>$dateBefore,'oneInterval'=>$oneInterval,'allInterval'=>$allInterval,'date'=>$date);
 	}
+
+    public function aplanObject($data,&$object,$superKey=""){
+        if (is_object($data)){
+            foreach ($data as $key => $value) {
+                $separator = ($superKey == "" ? "" : "_");
+                $this->aplanObject($value,$object,$superKey.$separator.$key);
+            }
+        } else {
+            $object->$superKey = $data;
+        }
+    }
+
+    public function aplanArray($data){
+        $result = array();
+        foreach ($data as $value) {
+            $object = new stdClass();
+            $this->aplanObject($value,$object);
+            $result[] = $object;
+        }
+        return $result;
+    }
 }

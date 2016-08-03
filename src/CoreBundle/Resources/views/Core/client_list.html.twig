@@ -9,6 +9,14 @@
 	.numericCol {text-align:right;}
 	</style>
 {% endblock %}
+{% block javascripts %}
+{{ parent()}}
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+	{% javascripts '@CoreBundle/Resources/public/js/client_list.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
 {% block body %}
 {{parent()}}
 	<table id="ClientTable">
@@ -51,12 +59,4 @@
 			</tr>
 		</tfoot>
 	</table>
-{% endblock %}
-{% block javascripts %}
-{{ parent()}}
-	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
-	{% javascripts '@CoreBundle/Resources/public/js/client_list.js' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
 {% endblock %}

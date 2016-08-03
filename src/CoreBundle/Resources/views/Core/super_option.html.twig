@@ -1,5 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block title %}BO Light | Super Option {% endblock %}
+{% block javascripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+{% javascripts '@CoreBundle/Resources/public/js/super_option.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
 {% block body %}
 <h2> Super Admin Option </h2>
 	<button class="btn btn-danger" id="delete">Delete Ipn</button><button class="btn btn-danger" id="deletePayment">Delete Payment</button><br>
@@ -28,11 +35,4 @@
 	</select></label>
 	<button type="submit">Load</button>{% if message is defined %}<p>{{message}}</p>{% endif %}
 </form>
-{% endblock %}
-{% block javascripts %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-{% javascripts '@CoreBundle/Resources/public/js/super_option.js' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
 {% endblock %}

@@ -26,6 +26,14 @@
 	}
 	</style>
 {% endblock %}
+{% block javascripts %}
+{{ parent()}}
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+{% javascripts '@CoreBundle/Resources/public/js/sales.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
 {% block body %}
 {{parent()}}
 	<table id="performanceTable" class="compact stripe">
@@ -89,12 +97,4 @@
 			</tr>
 		</tfoot>
 	</table>
-{% endblock %}
-{% block javascripts %}
-{{ parent()}}
-	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
-{% javascripts '@CoreBundle/Resources/public/js/sales.js' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
 {% endblock %}

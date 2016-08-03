@@ -12,6 +12,3 @@ default_route:
     defaults: { _controller: AppBundle:Main:create, url: "ipn" }
     requirements:
         url: "/ipn.+"
-payments:
-  type: rest
-  resource: CoreBundle\Controller\PaymentsController

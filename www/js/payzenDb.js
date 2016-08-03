@@ -23,7 +23,7 @@
       var rows = [];
       data.forEach(function(a){
         rows.push({
-          id:a.paymentResponse.transactionUuid,
+          id:a.paymentResponse_transactionUuid,
           value: {},
           doc: a
         });

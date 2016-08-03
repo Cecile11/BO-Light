@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use CoreBundle\Entity\Payment;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Exception\Exception;
+use stdClass;
 
 class JioController extends Controller{
 
@@ -20,10 +21,12 @@ class JioController extends Controller{
    {
     if ($id == null){
       $data = $this->getDoctrine()->getRepository('CoreBundle:Payment')->findAllData();
-     return new JsonResponse(array_column($data,'data'));
+     return new JsonResponse($this->get('Core.Tool')->aplanArray(array_column($data,'data')));
     } else {
       $payment = $this->getDoctrine()->getRepository('CoreBundle:Payment')->findOneByUuid($id);
-      return new JsonResponse($payment->getData());
+      $data = new stdClass();
+      $this->get('Core.Tool')->aplanObject($payment->getData(),$data);
+      return new JsonResponse($data);
     }
    }
 
@@ -35,9 +38,9 @@ class JioController extends Controller{
    }
 
    /**
-    * @Route("/payzenGadget",name="payzenGadget")
+    * @Route("/gadget/{name}",name="gadget")
     */
-   public function getGadget(Request $request){
-   	return $this->render('CoreBundle:Core:payzenGadget.html.twig');
+   public function getPaymentGadgetAction($name){
+   	return $this->render('CoreBundle:Core:'.$name.'Gadget.html.twig');
    }
 }

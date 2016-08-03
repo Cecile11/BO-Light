@@ -48,7 +48,7 @@ jio.put('cle1',{'title':'doc_test'})
         conflict_handling:2,
         local_sub_storage:{
           type:"indexeddb",
-          database:"payzenStorage"
+          database:"payzenDb"
         },
         remote_sub_storage:{
           type:"payzenStorage",
@@ -56,6 +56,7 @@ jio.put('cle1',{'title':'doc_test'})
         }
       }
     });
+
   gk.declareMethod("allTransaction",function(query){
     return jio.allDocs(query);
   })
@@ -63,6 +64,8 @@ jio.put('cle1',{'title':'doc_test'})
     return jio.repair().fail(function(error){
       console.log(error)
     });
+  }).declareService(function(){
+    return this.syncAll();
   });
 
 }(rJS, jIO, RSVP, JSON));

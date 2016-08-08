@@ -1,14 +1,5 @@
 CACHE MANIFEST
-# v 1.1
-../js/rsvp-2.0.4.js
-../js/jio-latest.js
-../js/payzenDb.js
-../js/payzenGadget.js
-../js/renderjs-0.10.0.min.js
-//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css
-../gadget/payzen
-../js/index.js
-//code.jquery.com/jquery-1.10.1.js
+# v 0
 
 NETWORK:
 *

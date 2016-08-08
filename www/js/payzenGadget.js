@@ -1,43 +1,6 @@
-/*var jio = jIO.createJIO({
-  type: "query",
-  sub_storage: {
-    type:"document",
-    document_id: "/",
-    sub_storage: {
-      type: "local",
-      sessiononly: true
-    }
-  }
-});
-
-jio.put('cle1',{'title':'doc_test'})
-  .then(function(){
-    console.log('doc create');
-    return jio.put('cle2',{'title':'doc_autre'});
-  })
-  .then(function(){
-    console.log('doc create');
-    return jio.put('cle3',{'title':'bonjour'});
-  })
-  .then(function(){
-    return jio.put('cle2',{'content':'lorem ipsum'});
-  })
-  .then(function(){
-    console.log('doc create');
-    return jio.allDocs({
-      query:'(title: "d%") OR (content: "l%")',
-      select_list: ["title"]
-    });
-  })
-  .then(function(response){
-    for(i = 0; i < response.data.total_rows; i++ ){
-      console.log(response.data.rows[i]);
-    }
-  })
-  .fail(function(error){
-    console.log(error);
-});*/
-(function (rJS, jIO, RSVP, JSON){
+/*jslint indent: 2, maxlen: 80, nomen: true */
+/*global console, window, rJS, jIO, RSVP */
+(function (window, rJS, jIO, RSVP){
   
   var gk = rJS(window);
 
@@ -68,4 +31,4 @@ jio.put('cle1',{'title':'doc_test'})
     return this.syncAll();
   });
 
-}(rJS, jIO, RSVP, JSON));
+}(window, rJS, jIO, RSVP));

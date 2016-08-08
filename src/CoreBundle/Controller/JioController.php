@@ -32,15 +32,16 @@ class JioController extends Controller{
 
    /**
     * @Route("/test",name="test")
+    * @Security("has_role('ROLE_USER')")
     */
    public function testAction(Request $request){
-     return $this->render('CoreBundle:Core:index.html.twig');
+     return $this->render('CoreBundle:Core:jio/index.html.twig');
    }
 
    /**
     * @Route("/gadget/{name}",name="gadget")
     */
    public function getPaymentGadgetAction($name){
-   	return $this->render('CoreBundle:Core:'.$name.'Gadget.html.twig');
+   	return $this->render('CoreBundle:Core:jio/'.$name.'Gadget.html.twig');
    }
 }

@@ -20,14 +20,18 @@
       }
     });
 
-  gk.declareMethod("allTransaction",function(query){
-    return jio.allDocs(query);
+  gk.declareMethod("getPayment",function(){
+    return jio.allDocs({
+      limit: [0, 50],
+      select_list: ["orderResponse_orderId"]
+    });
   })
   .declareMethod("syncAll",function(){
     return jio.repair().fail(function(error){
       console.log(error)
     });
-  }).declareService(function(){
+  })
+  .declareService(function(){
     return this.syncAll();
   });
 

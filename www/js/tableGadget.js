@@ -6,7 +6,7 @@
     var g = this;
     return g.getElement()
     .push(function(element){
-      var oTable = $(element.getElementsByTagName("table")[0]);
+      var oTable = $(element).find(".table-data").eq(0);
       var dataTable = $.fn.dataTable;
       oTable.dataTable({
         "aaData":data.data.rows,

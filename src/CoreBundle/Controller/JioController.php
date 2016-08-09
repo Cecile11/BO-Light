@@ -32,7 +32,7 @@ class JioController extends Controller{
 
    /**
     * @Route("/test",name="test")
-    * @Security("has_role('ROLE_USER')")
+    * @Security("has_role('ROLE_USER')")é
     */
    public function testAction(Request $request){
      return $this->render('CoreBundle:Core:jio/index.html.twig');

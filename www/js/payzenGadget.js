@@ -21,9 +21,26 @@
     });
 
   gk.declareMethod("getPayment",function(){
-    return jio.allDocs({
-      limit: [0, 50],
-      select_list: ["orderResponse_orderId"]
+    return jio.allDocs()
+    .push(function(data){
+      var data = data;
+      var promises = [];
+      data.data.rows.forEach(function(row){
+        promises.push(jio.get(row.id));
+      });
+      return RSVP.all(promises)
+      .then(function(values){
+        var j;
+        for (var i = data.data.rows.length - 1; i >= 0; i--) {
+          if (/_replicate/.test(data.data.rows[i].id)){
+            j = i;
+          } else {
+            data.data.rows[i].value = values[i];
+          }
+        };
+        data.data.rows.splice(j,1); // Delete __replicate record.
+        return data;
+      });
     });
   })
   .declareMethod("syncAll",function(){

@@ -31,10 +31,11 @@
       // load init gadgets
       return g.getDeclaredGadget("navigation")
       .push(function(gadget){
-        return gadget.addPages([{"title":"Sales","gadget":"gadget/sales"},{"title":"Payment","gadget":"gadget/payment"}],g);
+        return gadget.addPages([{"title":"Sales","gadget":"gadget/sales"},{"title":"Payment","gadget":"gadget/payment"}]);
       })
       .push(function(gadget){
-        return gadget.changePage("gadget/payment");
+        gadget.render();
+        return gadget.changePage("gadget/payment","Day",0);
       });
     })
     /* ======================== METHODS EXPOSED =========================== */
@@ -46,20 +47,14 @@
     /* ==================================================================== */
     /*                            METHOD INDEX                              */
     /* ==================================================================== */
-    .allowPublicAcquisition("storage_getPayment",function(){
+    .allowPublicAcquisition("storage_getPayment",function(param){
       return this.getDeclaredGadget("storage")
       .push(function(storage){
-        return storage.getPayment();
+        return storage.getPayment(param[0],param[1]);
       });
     })
     .allowPublicAcquisition("main_gadget",function(){
       return this.pass_main_gadget();
-    })
-    .declareService(function(){
-      return this.getDeclaredGadget("storage")
-      .push(function(gadget){
-        gadget.syncAll();
-      });
     })
 
 }(window, document, rJS, RSVP));

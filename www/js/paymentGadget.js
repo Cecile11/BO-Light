@@ -4,13 +4,11 @@
   "use strict";
 
   rJS(window)
-  .declareService(function(){
-  	var g = this;
-  	return g.getAllPayment()
-  		.push(function(data){
-  			return g.getDeclaredGadget("table")
-			.push(function(gadget){
-				return gadget.setData([{
+  .ready(function(g){
+  	g.render();
+  })
+  .declareMethod("render",function(){
+  	this.table_header = [{
 					"sTitle":"Uuid<br><small>TransactionID</small>",
 					"mData":"value",
 					"mRender": function(data){
@@ -33,7 +31,9 @@
 					"sTitle":"<strong> CreationDate </strong><br><small> LastDate </small>",
 					"mData":"value",
 					"mRender": function(data){
-						return data.paymentResponse_creationDate + '<br><small>' + (data.captureResponse_date ? data.captureResponse_date : data.paymentResponse_creationDate) + '</small>';
+						var d = new Date(data.paymentResponse_creationDate);
+						var d2 = new Date (data.captureResponse_date);
+						return d.toLocaleString() + '<br><small>' + ( data.captureResponse_date ? d2.toLocaleString() : d.toLocaleString()) + '</small>';
 					}
 				},{
 					"sTitle":"Status",
@@ -50,13 +50,25 @@
 				},{
 					"sTitle":"Mail",
 					"mData":"value.customerResponse_billingDetails_email"
-				}],data);
-			});
+				}];
+  })
+	.declareMethod("setData",function(data){
+		var g = this;
+		g.getDeclaredGadget("table")
+		.push(function(gadget){
+			gadget.setData(g.table_header,data);
+		});
+	})
+  .declareMethod("setContent",function(time,offset){
+		var g = this;
+		g.getAllPayment(time,offset)
+  		.push(function(data){
+  		g.setData(data);
 		});
 	})
   /* ========================= METHODS NEEDED =========================== */
-    .declareAcquiredMethod("nav_main_gadget","main_gadget")
-    .declareAcquiredMethod("getAllPayment","storage_getPayment");
+  .declareAcquiredMethod("nav_main_gadget","main_gadget")
+  .declareAcquiredMethod("getAllPayment","storage_getPayment");
 
   var formatJSONdata = function(data){
   	var string = JSON.stringify(data);

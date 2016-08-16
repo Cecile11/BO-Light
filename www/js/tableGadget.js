@@ -21,11 +21,14 @@
     .push(function(element){
       var oTable = $(element).find(".table-data").eq(0);
       var dataTable = $.fn.dataTable;
-      var table = oTable.dataTable({
+      if (dataTable.isDataTable(g.table)){
+        g.table.fnDestroy();
+      }
+      g.table = oTable.dataTable({
         "aaData":data.data.rows,
         "aoColumns":header
       });
-      table.on( 'draw.dt', initPopover);
+      g.table.on( 'draw.dt', initPopover);
       return g;
     }).push(function(){
       initPopover();

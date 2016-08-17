@@ -15,15 +15,24 @@
       return g.getDeclaredGadget("timeSelector");
     }).push(function(gadget){
       g.time_selector = gadget;
-      return gadget.getButtonList();
-    }).push(function(button_list){
-      for (var i = button_list.length - 1; i >= 0; i--) {
-        button_list[i].addEventListener('click',function(){
-          g.changePage("current",this.innerHTML,0);
-        });
-      };
-      g.current_page = $(g.main_gadget.__element).find(".current_page")[0];
-      return g;
+      gadget.getButtonList()
+      .push(function(button_list){
+        for (var i = button_list.length - 1; i >= 0; i--) {
+          button_list[i].addEventListener('click',function(){
+            g.changePage("current",this.innerHTML,0);
+          });
+        };
+        g.current_page = $(g.main_gadget.__element).find(".current_page")[0];
+      return gadget.getOffsetButton();
+      })
+      .push(function(button_list){
+        for (var i = button_list.length - 1; i >= 0; i--) {
+          button_list[i].addEventListener('click',function(){
+            g.changePage("current",gadget.time_selected,gadget.offset);
+          })
+        };
+      })
+
     });
 
   })

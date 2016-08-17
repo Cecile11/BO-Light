@@ -15,7 +15,7 @@
     return ((x > y) ? -1 : ((x < y) ?  1 : 0));
   };
 
-  gk.declareMethod("setData",function(header,data){
+  gk.declareMethod("setData",function(option){
     var g = this;
     return g.getElement()
     .push(function(element){
@@ -24,14 +24,23 @@
       if (dataTable.isDataTable(g.table)){
         g.table.fnDestroy();
       }
-      g.table = oTable.dataTable({
-        "aaData":data.data.rows,
-        "aoColumns":header
-      });
+      g.table = oTable.dataTable(option);
       g.table.on( 'draw.dt', initPopover);
       return g;
     }).push(function(){
       initPopover();
+    });
+  })
+  .declareMethod("clearData",function(){
+    var g = this;
+    return g.getElement()
+    .push(function(element){
+      var oTable = $(element).find(".table-data").eq(0);
+      var dataTable = $.fn.dataTable;
+      if (dataTable.isDataTable(g.table)){
+        g.table.fnDestroy();
+      }
+      oTable.html("");
     });
   });
 

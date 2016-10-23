@@ -47,7 +47,11 @@
                 {% endif %}
                 <li class="active"><a href="{{ path('clients') }}{% if limit is defined %}/{{limit}}{% endif %}{% if offset is defined %}/{{offset}}{% endif %}"> Clients </a></li>
                 <li class="active"><a href="{{ path('sales') }}{% if limit is defined %}/{{limit}}{% endif %}{% if offset is defined %}/{{offset}}{% endif %}"> Sales </a></li>
+                <li class="active"><a href="{{ path('fos_user_profile_show') }}"> Profile </a></li>
                 {% block navbar %}{% endblock %}
+                {% if is_granted('ROLE_ADMIN') %}
+                <li class="active"><a href="{{ path('user_index')}}"> Users </a></li>
+                {% endif %}
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <li class="active"><a href="{{ path('super_option')}}"> Super Option </a></li>
                 {% endif %}

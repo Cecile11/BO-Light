@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+    {{ form_start(edit_form) }}
+        {{ form_widget(edit_form) }}
+        <input class="btn btn-primary col-sm-offset-2" type="submit" value="Edit" />
+        <a class="btn btn-primary" href="{{ path('user_index') }}">Back to the list</a>
+        {{ form_start(edit_form) }}
+        <input class="btn btn-danger" type="submit" value="submit">
+        {{ form_end(edit_form) }}
+    {{ form_end(edit_form) }}
+{% endblock %}

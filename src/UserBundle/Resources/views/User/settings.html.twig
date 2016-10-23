@@ -1,0 +1,22 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% block fos_user_content %}
+<div>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+    <li role="presentation"><a href="#password" aria-controls="password" role="tab" data-toggle="tab">Resset Password</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="profile">
+	    {{ render(controller("FOSUserBundle:Profile:edit"))}}
+    </div>
+    <div role="tabpanel" class="tab-pane" id="password">
+      {{ render(controller("FOSUserBundle:ChangePassword:changePassword"))}}
+    </div>
+  </div>
+
+</div>
+{% endblock fos_user_content %}

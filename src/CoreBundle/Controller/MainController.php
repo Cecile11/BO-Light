@@ -131,7 +131,7 @@ class MainController extends Controller
      */
     public function getPaymentAction(Request $request){
         $em = $this->getDoctrine()->getManager();
-        $dates = $this->get('core.Tool')->getDates("day",1);
+        $dates = $this->get('core.Tool')->getDates("today",1);
         $ipn_list = $em->getRepository('CoreBundle:Ipn')->getLast(
             1000,
             $dates
@@ -155,7 +155,7 @@ class MainController extends Controller
             }
         }
         ob_clean();
-        return new Response($i);
+        return new Response($i - 1);
     }
 
 

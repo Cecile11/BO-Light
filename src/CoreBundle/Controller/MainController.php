@@ -106,6 +106,57 @@ class MainController extends Controller
     }
 
     /**
+     * @Route("/load_ipn",name="load_ipn")
+     */
+    public function loaddbAction(Request $request){
+        $kernel = $this->get('kernel');
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+           'command' => 'loaddb',
+           'db' => $this->getParameter('app.path_old_database'),
+        ));
+
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+        return new Response($output->fetch());
+    }
+
+    /**
+     * @Route("/load_payment",name="load_payment")
+     */
+    public function getPaymentAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $dates = $this->get('core.Tool')->getDates("day",1);
+        $ipn_list = $em->getRepository('CoreBundle:Ipn')->getLast(
+            1000,
+            $dates
+        );
+        $i = 1;
+        ob_start();
+        foreach ($ipn_list as $ipn) {
+            $uuid = $ipn['vadsTransUuid'];
+            $payment = $em->getRepository('CoreBundle:Payment')->findOneByUuid($uuid);
+            if(!$payment){
+                if($i%5 == 0){
+                    sleep(5);
+                }
+                $request->attributes->set('site_id',$ipn['vadsSiteId']);
+                $test = false;
+                $j = 0;
+                while (!$test and $j < 5 ){
+                    $test = $this->get('core.Loader')->loadPayment($uuid);
+                }
+                $i++;
+            }
+        }
+        ob_clean();
+        return new Response($i);
+    }
+
+
+    /**
      * @Route("/list/{limit}/{offset}", name="list")
      * @Security("has_role('ROLE_USER')")
      */

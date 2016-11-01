@@ -23,6 +23,12 @@ class User extends BaseUser
    */
    private $timeZone;
 
+  /**
+   * @var string
+   * @ORM\Column(name="role", type="string", length=255, nullable=true)
+   */
+   private $role;
+
     /**
      * Set timeZone
      *
@@ -45,5 +51,29 @@ class User extends BaseUser
     public function getTimeZone()
     {
         return $this->timeZone;
+    }
+
+    /**
+     * Set role
+     *
+     * @param string $role
+     *
+     * @return User
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get role
+     *
+     * @return string
+     */
+    public function getRole()
+    {
+        return $this->role;
     }
 }

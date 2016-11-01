@@ -129,9 +129,9 @@ class MainController extends Controller
     /**
      * @Route("/load_payment",name="load_payment")
      */
-    public function getPaymentAction(Request $request){
+    public function LoadPaymentAction(Request $request){
         $em = $this->getDoctrine()->getManager();
-        $dates = $this->get('core.Tool')->getDates("today",1);
+        $dates = $this->get('core.Tool')->getDates("week",0);
         $ipn_list = $em->getRepository('CoreBundle:Ipn')->getLast(
             1000,
             $dates

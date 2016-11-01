@@ -6,6 +6,7 @@ use UserBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * User controller.
@@ -65,11 +66,19 @@ class UserController extends Controller
      */
     public function editAction(Request $request, User $user)
     {
+        $roles = $user->getRoles();
+        if (!$user->getRole()) {
+            $user->setRole(count($roles) == 0 ? "ROLE_USER" : $roles[0]);
+        }
         $deleteForm = $this->createDeleteForm($user);
-        $editForm = $this->createForm('UserBundle\Form\UserType', $user);
+        $editForm = $this->createFormBuilder($user)
+          ->add("username", TextType::class)
+          ->add("role", TextType::class)
+          ->getForm();
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $user->setRoles(($user->getRole() == "") ? ["ROLE_USER"] : [$user->getRole()] );
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('user_edit', array('id' => $user->getId()));

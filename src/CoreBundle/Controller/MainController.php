@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace CoreBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -32,7 +32,7 @@ class MainController extends Controller
         }
         $request->attributes->set('site_id',$request->request->get('vads_site_id'));
         // a faire mode prod ( connecter avec l'user ? )
-        
+
         $key = $this->get('core.Config')->getKey();
         $k = '';
         ksort($arg);
@@ -48,55 +48,55 @@ class MainController extends Controller
         $utc = new DateTimeZone('UTC');
         $ipn = new Ipn();
         $ipn->setStatus("NEW");
-        $ipn->setTs(new DateTime($ipnOne['ts'],$utc));
-        $ipn->setVadsSiteId($ipnOne['vads_site_id']);
-        $ipn->setVadsUrlCheckSrc($ipnOne['vads_url_check_src']);
-        $ipn->setVadsPaymentSrc($ipnOne['vads_payment_src']);
-        $ipn->setVadsShopName($ipnOne['vads_shop_name']);
-        $ipn->setVadsCtxMode($ipnOne['vads_ctx_mode']);
-        $ipn->setVadsTransUuid($ipnOne['vads_trans_uuid']);
-        $ipn->setVadsTransId($ipnOne['vads_trans_id']);
-        $ipn->setVadsOrderId($ipnOne['vads_order_id']);
-        $ipn->setVadsOrderInfo($ipnOne['vads_order_info']);
-        $ipn->setVadsPaymentConfig($ipnOne['vads_payment_config']);
-        $ipn->setVadsEffectiveCreationDate(($ipnOne['vads_effective_creation_date'] == "") ? null : new DateTime($ipnOne['vads_effective_creation_date'],$utc));
-        $output->writeln($ipnOne['vads_sub_effect_date']);
-        $ipn->setVadsOperationType($ipnOne['vads_operation_type']);
-        $ipn->setVadsTransStatus($ipnOne['vads_trans_status']);
-        $ipn->setVadsResult($ipnOne['vads_result']);
-        $ipn->setVadsExtraResult($ipnOne['vads_extra_result']);
-        $ipn->setVadsEffectiveAmount($ipnOne['vads_effective_amount']);
-        $ipn->setVadsCurrency($ipnOne['vads_currency']);
-        $ipn->setVadsContractUsed($ipnOne['vads_contract_used']);
-        $ipn->setVadsAuthMode($ipnOne['vads_auth_mode']);
-        $ipn->setVadsCardBrand($ipnOne['vads_card_brand']);
-        $ipn->setVadsCardNumber($ipnOne['vads_card_number']);
-        $ipn->setVadsPaymentSeq($ipnOne['vads_payment_seq']);
-        $ipn->setVadsCustEmail($ipnOne['vads_cust_email']);
-        $ipn->setVadsCaptureDelay($ipnOne['vads_capture_delay']);
-        $ipn->setVadsPresentationDate(($ipnOne['vads_presentation_date'] == "") ? null : new DateTime($ipnOne['vads_presentation_date'],$utc));
-        $ipn->setVadsWarrantyResult($ipnOne['vads_warranty_result']);
-        $ipn->setVadsRiskControl($ipnOne['vads_risk_control']);
+        $ipn->setTs(new DateTime($arg['ts'],$utc));
+        $ipn->setVadsSiteId($arg['vads_site_id']);
+        $ipn->setVadsUrlCheckSrc($arg['vads_url_check_src']);
+        $ipn->setVadsPaymentSrc($arg['vads_payment_src']);
+        $ipn->setVadsShopName($arg['vads_shop_name']);
+        $ipn->setVadsCtxMode($arg['vads_ctx_mode']);
+        $ipn->setVadsTransUuid($arg['vads_trans_uuid']);
+        $ipn->setVadsTransId($arg['vads_trans_id']);
+        $ipn->setVadsOrderId($arg['vads_order_id']);
+        $ipn->setVadsOrderInfo($arg['vads_order_info']);
+        $ipn->setVadsPaymentConfig($arg['vads_payment_config']);
+        $ipn->setVadsEffectiveCreationDate(($arg['vads_effective_creation_date'] == "") ? null : new DateTime($arg['vads_effective_creation_date'],$utc));
+        $output->writeln($arg['vads_sub_effect_date']);
+        $ipn->setVadsOperationType($arg['vads_operation_type']);
+        $ipn->setVadsTransStatus($arg['vads_trans_status']);
+        $ipn->setVadsResult($arg['vads_result']);
+        $ipn->setVadsExtraResult($arg['vads_extra_result']);
+        $ipn->setVadsEffectiveAmount($arg['vads_effective_amount']);
+        $ipn->setVadsCurrency($arg['vads_currency']);
+        $ipn->setVadsContractUsed($arg['vads_contract_used']);
+        $ipn->setVadsAuthMode($arg['vads_auth_mode']);
+        $ipn->setVadsCardBrand($arg['vads_card_brand']);
+        $ipn->setVadsCardNumber($arg['vads_card_number']);
+        $ipn->setVadsPaymentSeq($arg['vads_payment_seq']);
+        $ipn->setVadsCustEmail($arg['vads_cust_email']);
+        $ipn->setVadsCaptureDelay($arg['vads_capture_delay']);
+        $ipn->setVadsPresentationDate(($arg['vads_presentation_date'] == "") ? null : new DateTime($arg['vads_presentation_date'],$utc));
+        $ipn->setVadsWarrantyResult($arg['vads_warranty_result']);
+        $ipn->setVadsRiskControl($arg['vads_risk_control']);
         $ipn->setVadsValidationMode("0");
-        $ipn->setVadsRecurrenceStatus($ipnOne['vads_recurrence_status']);
-        $ipn->setVadsIdentifierStatus($ipnOne['vads_identifier_status']);
-        $ipn->setVadsIdentifier($ipnOne['vads_identifier']);
-        $ipn->setVadsSubscription($ipnOne['vads_subscription']);
-        $ipn->setVadsSubDesc($ipnOne['vads_sub_desc']);
-        $ipn->setVadsSubEffectDate(($ipnOne['vads_sub_effect_date'] == "") ? null : new DateTime($ipnOne['vads_sub_effect_date'],$utc));
-        $ipn->setVadsSubCurrency($ipnOne['vads_sub_currency']);
-        $ipn->setVadsSubAmount($ipnOne['vads_sub_amount']);
-        $ipn->setVadsSubInitAmountNumber($ipnOne['vads_sub_init_amount_number']);
-        $ipn->setVadsSubInitAmount($ipnOne['vads_sub_init_amount']);
-        $ipn->setVadsContrib($ipnOne['vads_contrib']);
-        $ipn->setVadsExtInfoDonation($ipnOne['vads_ext_info_donation']);
-        $ipn->setVadsExtInfoDonationRecipient($ipnOne['vads_ext_info_donation_recipient']);
-        $ipn->setVadsExtInfoDonationRecipientName($ipnOne['vads_ext_info_donation_recipient_name']);
-        $ipn->setVadsExtInfoDonationMerchant($ipnOne['vads_ext_info_donation_merchant']);
-        $ipn->setSignature($ipnOne['signature']);
-        $ipn->setFull($ipnOne['full']);
-        $ipn->setChecked($ipnOne['checked']);
-        $data = json_decode($ipnOne['full']);
+        $ipn->setVadsRecurrenceStatus($arg['vads_recurrence_status']);
+        $ipn->setVadsIdentifierStatus($arg['vads_identifier_status']);
+        $ipn->setVadsIdentifier($arg['vads_identifier']);
+        $ipn->setVadsSubscription($arg['vads_subscription']);
+        $ipn->setVadsSubDesc($arg['vads_sub_desc']);
+        $ipn->setVadsSubEffectDate(($arg['vads_sub_effect_date'] == "") ? null : new DateTime($arg['vads_sub_effect_date'],$utc));
+        $ipn->setVadsSubCurrency($arg['vads_sub_currency']);
+        $ipn->setVadsSubAmount($arg['vads_sub_amount']);
+        $ipn->setVadsSubInitAmountNumber($arg['vads_sub_init_amount_number']);
+        $ipn->setVadsSubInitAmount($arg['vads_sub_init_amount']);
+        $ipn->setVadsContrib($arg['vads_contrib']);
+        $ipn->setVadsExtInfoDonation($arg['vads_ext_info_donation']);
+        $ipn->setVadsExtInfoDonationRecipient($arg['vads_ext_info_donation_recipient']);
+        $ipn->setVadsExtInfoDonationRecipientName($arg['vads_ext_info_donation_recipient_name']);
+        $ipn->setVadsExtInfoDonationMerchant($arg['vads_ext_info_donation_merchant']);
+        $ipn->setSignature($arg['signature']);
+        $ipn->setFull($arg['full']);
+        $ipn->setChecked($arg['checked']);
+        $data = json_decode($arg['full']);
         $ipn->setIdClient($data->vads_cust_id);
 
         $em = $this->get('doctrine.orm.entity_manager');
@@ -211,7 +211,7 @@ class MainController extends Controller
                         $vads = $this->get("core.PayzenWSv5");
                         $mode = $this->get("core.Config")->getMode();
                         sleep(2);
-                        
+
                         try {
                             $response = $vads->getPaymentDetails($uuid);
                         }
@@ -247,7 +247,7 @@ class MainController extends Controller
                 ob_clean();
             }
         }
-        
+
         return $this->render('CoreBundle:Core:payment_list.html.twig',array('payment_list'=>$payment_list,'limit'=>$limit,'url'=>'payment','decalage'=>$decalage,'offset'=>$offset,'date'=>$date));
     }
 
@@ -276,7 +276,7 @@ class MainController extends Controller
                 );
         }
 
-        
+
 
         return $this->render('CoreBundle:Core:client_list.html.twig',array('limit'=>$limit,'client_list'=>$client_list,'url'=>'clients','offset'=>$offset,'date'=>$date));
     }
